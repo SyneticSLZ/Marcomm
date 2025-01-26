@@ -410,6 +410,183 @@ const state = {
 };
 
 // UI Components
+// const components = {
+//     competitorRow: {
+//         render(competitor) {
+//             return `
+//             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+//                 <td class="px-6 py-4 whitespace-nowrap">
+//                     <div class="flex items-center">
+//                         <div class="ml-4">
+//                             <div class="text-sm font-medium text-gray-900 dark:text-white">${competitor.name}</div>
+//                             <div class="text-sm text-gray-500 dark:text-gray-400">${competitor.industry}</div>
+//                         </div>
+//                     </div>
+//                 </td>
+//                 <td class="px-6 py-4 whitespace-nowrap">
+//                     <div class="flex items-center">
+//                         ${this.renderMarketPosition(competitor.marketPosition)}
+//                     </div>
+//                 </td>
+//                 <td class="px-6 py-4">
+//                     <div class="space-y-2">
+//                         ${this.renderRecentActivities(competitor.recentActivities)}
+//                     </div>
+//                 </td>
+//                 <td class="px-6 py-4 whitespace-nowrap">
+//                     ${this.renderQuickMetrics(competitor.keyMetrics)}
+//                 </td>
+// <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+//    <button onclick="app.viewCompetitor(${competitor.id})" 
+//        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md hover:from-blue-600 hover:to-blue-700 mr-3">
+//        <i class="fas fa-eye mr-2"></i>
+//        View Data
+//    </button>
+//    <button style="display: none;" onclick="app.editCompetitor(${competitor.id})"
+//        class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 mr-3">
+//        Edit
+//    </button>
+//    <button style="display: none;" onclick="app.deleteCompetitor(${competitor.id})"
+//        class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+//        Delete
+//    </button>
+// </td>
+//             </tr>
+//         `;
+//         },
+
+//         renderMarketPosition(position) {
+//             const colors = {
+//                 'Market Leader': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+//                 'Challenger': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+//                 'Follower': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+//             };
+//             return `
+//                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[position.type] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}">
+//                     ${position.type}
+//                 </span>
+//                 <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+//                     Rank #${position.rank}
+//                 </span>
+//             `;
+//         },
+
+
+//         renderRecentActivities(activities) {
+//             const icons = {
+//                 patent: 'fa-lightbulb',
+//                 executive: 'fa-user-tie',
+//                 product: 'fa-box',
+//                 acquisition: 'fa-handshake',
+//                 partnership: 'fa-hands-helping',
+//                 expansion: 'fa-chart-line'
+//             };
+//             return activities.map(activity => `
+//                 <div class="flex items-center text-sm">
+//                     <i class="fas ${icons[activity.type] || 'fa-circle'} text-gray-400 dark:text-gray-500 mr-2"></i>
+//                     <span class="truncate text-gray-900 dark:text-gray-300">${activity.title}</span>
+//                 </div>
+//             `).join('');
+//         },
+
+//         renderQuickMetrics(metrics) {
+//             return `
+//                 <div class="grid grid-cols-2 gap-2">
+//                     <div class="flex items-center">
+//                         <span class="text-sm text-blue-600 dark:text-blue-400">
+//                             <i class="fas fa-chart-line mr-1"></i>
+//                             Revenue: ${metrics.revenue}M
+//                         </span>
+//                     </div>
+//                     <div class="flex items-center">
+//                         <span class="text-sm text-green-600 dark:text-green-400">
+//                             <i class="fas fa-users mr-1"></i>
+//                             Recent Patents: ${metrics.recentPatents}
+                            
+//                         </span>
+//                     </div>
+//                     <div class="flex items-center">
+//                         <span class="text-sm text-purple-600 dark:text-purple-400">
+//                             <i class="fas fa-chart-bar mr-1"></i>
+//                             MarketShare: ${metrics.marketShare}%
+//                         </span>
+//                     </div>
+//                     <div class="flex items-center">
+//                         <span class="text-sm text-yellow-600 dark:text-yellow-400">
+//                             <i class="fas fa-lightbulb mr-1"></i>
+//                             FDA Filings: ${metrics.filings}
+//                         </span>
+//                     </div>
+//                 </div>
+//             `;
+//         }
+//     },
+
+//     //     renderStrategicImpact(impact) {
+//     //         const threatColor = impact.threat === 'High' 
+//     //             ? 'text-red-600 dark:text-red-400' 
+//     //             : 'text-yellow-600 dark:text-yellow-400';
+//     //         const opportunityColor = impact.opportunity === 'High' 
+//     //             ? 'text-green-600 dark:text-green-400' 
+//     //             : 'text-blue-600 dark:text-blue-400';
+    
+//     //         return `
+//     //             <div class="space-y-1">
+//     //                 <div class="flex items-center">
+//     //                     <span class="text-sm ${threatColor} transition-colors duration-200">
+//     //                         <i class="fas fa-exclamation-triangle mr-1"></i>
+//     //                         ${impact.threat} Threat
+//     //                     </span>
+//     //                 </div>
+//     //                 <div class="flex items-center">
+//     //                     <span class="text-sm ${opportunityColor} transition-colors duration-200">
+//     //                         <i class="fas fa-star mr-1"></i>
+//     //                         ${impact.opportunity} Opportunity
+//     //                     </span>
+//     //                 </div>
+//     //             </div>
+//     //         `;
+//     //     }
+//     // },
+
+//     quickView: {
+//         render(competitor) {
+//             return `
+//             <div class="grid grid-cols-2 gap-6">
+//                 <div>
+//                     <h4 class="text-lg font-medium mb-4 text-gray-900 dark:text-white">Company Overview</h4>
+//                     <div class="space-y-4">
+//                         <div>
+//                             <p class="text-sm text-gray-600 dark:text-gray-400">Industry</p>
+//                             <p class="text-base font-medium text-gray-900 dark:text-white">${competitor.industry}</p>
+//                         </div>
+//                         <div>
+//                             <p class="text-sm text-gray-600 dark:text-gray-400">Revenue</p>
+//                             <p class="text-base font-medium text-gray-900 dark:text-white">$${(competitor.keyMetrics.revenue / 1e9).toFixed(1)}B</p>
+//                         </div>
+//                         <div>
+//                             <p class="text-sm text-gray-600 dark:text-gray-400">Market Share</p>
+//                             <p class="text-base font-medium text-gray-900 dark:text-white">${competitor.keyMetrics.marketShare}%</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 <div>
+//                     <h4 class="text-lg font-medium mb-4 text-gray-900 dark:text-white">Recent Activities</h4>
+//                     <div class="space-y-4">
+//                         ${competitor.recentActivities.map(activity => `
+//                             <div>
+//                                 <p class="text-sm font-medium text-gray-900 dark:text-white">${activity.title}</p>
+//                                 <p class="text-sm text-gray-600 dark:text-gray-400">${activity.date}</p>
+//                             </div>
+//                         `).join('')}
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+//     }
+// }
+// };
+
 const components = {
     competitorRow: {
         render(competitor) {
@@ -418,7 +595,7 @@ const components = {
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                         <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${competitor.name}</div>
+                            <div class="text-sm font-medium text-marcomm-dark dark:text-white">${competitor.name}</div>
                             <div class="text-sm text-gray-500 dark:text-gray-400">${competitor.industry}</div>
                         </div>
                     </div>
@@ -436,33 +613,25 @@ const components = {
                 <td class="px-6 py-4 whitespace-nowrap">
                     ${this.renderQuickMetrics(competitor.keyMetrics)}
                 </td>
-<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-   <button onclick="app.viewCompetitor(${competitor.id})" 
-       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md hover:from-blue-600 hover:to-blue-700 mr-3">
-       <i class="fas fa-eye mr-2"></i>
-       View Data
-   </button>
-   <button style="display: none;" onclick="app.editCompetitor(${competitor.id})"
-       class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 mr-3">
-       Edit
-   </button>
-   <button style="display: none;" onclick="app.deleteCompetitor(${competitor.id})"
-       class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-       Delete
-   </button>
-</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="app.viewCompetitor(${competitor.id})" 
+                        class="inline-flex items-center px-4 py-2 bg-marcomm-orange hover:bg-marcomm-orange-light text-white rounded transition-colors duration-200">
+                        <i class="fas fa-eye mr-2"></i>
+                        View Data
+                    </button>
+                </td>
             </tr>
         `;
         },
 
         renderMarketPosition(position) {
             const colors = {
-                'Market Leader': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
-                'Challenger': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
-                'Follower': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+                'Market Leader': 'bg-marcomm-orange/10 text-marcomm-orange',
+                'Challenger': 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200',
+                'Follower': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
             };
             return `
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[position.type] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[position.type]}">
                     ${position.type}
                 </span>
                 <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
@@ -470,7 +639,6 @@ const components = {
                 </span>
             `;
         },
-
 
         renderRecentActivities(activities) {
             const icons = {
@@ -483,8 +651,8 @@ const components = {
             };
             return activities.map(activity => `
                 <div class="flex items-center text-sm">
-                    <i class="fas ${icons[activity.type] || 'fa-circle'} text-gray-400 dark:text-gray-500 mr-2"></i>
-                    <span class="truncate text-gray-900 dark:text-gray-300">${activity.title}</span>
+                    <i class="fas ${icons[activity.type] || 'fa-circle'} text-marcomm-orange mr-2"></i>
+                    <span class="truncate text-marcomm-dark dark:text-gray-300">${activity.title}</span>
                 </div>
             `).join('');
         },
@@ -493,28 +661,27 @@ const components = {
             return `
                 <div class="grid grid-cols-2 gap-2">
                     <div class="flex items-center">
-                        <span class="text-sm text-blue-600 dark:text-blue-400">
+                        <span class="text-sm text-marcomm-orange">
                             <i class="fas fa-chart-line mr-1"></i>
                             Revenue: ${metrics.revenue}M
                         </span>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-sm text-green-600 dark:text-green-400">
+                        <span class="text-sm text-marcomm-orange">
                             <i class="fas fa-users mr-1"></i>
-                            Recent Patents: ${metrics.recentPatents}
-                            
+                            Patents: ${metrics.recentPatents}
                         </span>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-sm text-purple-600 dark:text-purple-400">
+                        <span class="text-sm text-marcomm-orange">
                             <i class="fas fa-chart-bar mr-1"></i>
-                            MarketShare: ${metrics.marketShare}%
+                            Share: ${metrics.marketShare}%
                         </span>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-sm text-yellow-600 dark:text-yellow-400">
+                        <span class="text-sm text-marcomm-orange">
                             <i class="fas fa-lightbulb mr-1"></i>
-                            FDA Filings: ${metrics.filings}
+                            FDA: ${metrics.filings}
                         </span>
                     </div>
                 </div>
@@ -522,60 +689,33 @@ const components = {
         }
     },
 
-    //     renderStrategicImpact(impact) {
-    //         const threatColor = impact.threat === 'High' 
-    //             ? 'text-red-600 dark:text-red-400' 
-    //             : 'text-yellow-600 dark:text-yellow-400';
-    //         const opportunityColor = impact.opportunity === 'High' 
-    //             ? 'text-green-600 dark:text-green-400' 
-    //             : 'text-blue-600 dark:text-blue-400';
-    
-    //         return `
-    //             <div class="space-y-1">
-    //                 <div class="flex items-center">
-    //                     <span class="text-sm ${threatColor} transition-colors duration-200">
-    //                         <i class="fas fa-exclamation-triangle mr-1"></i>
-    //                         ${impact.threat} Threat
-    //                     </span>
-    //                 </div>
-    //                 <div class="flex items-center">
-    //                     <span class="text-sm ${opportunityColor} transition-colors duration-200">
-    //                         <i class="fas fa-star mr-1"></i>
-    //                         ${impact.opportunity} Opportunity
-    //                     </span>
-    //                 </div>
-    //             </div>
-    //         `;
-    //     }
-    // },
-
     quickView: {
         render(competitor) {
             return `
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <h4 class="text-lg font-medium mb-4 text-gray-900 dark:text-white">Company Overview</h4>
+                    <h4 class="text-lg font-light mb-4 text-marcomm-dark dark:text-white">Company Overview</h4>
                     <div class="space-y-4">
                         <div>
                             <p class="text-sm text-gray-600 dark:text-gray-400">Industry</p>
-                            <p class="text-base font-medium text-gray-900 dark:text-white">${competitor.industry}</p>
+                            <p class="text-base font-medium text-marcomm-dark dark:text-white">${competitor.industry}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 dark:text-gray-400">Revenue</p>
-                            <p class="text-base font-medium text-gray-900 dark:text-white">$${(competitor.keyMetrics.revenue / 1e9).toFixed(1)}B</p>
+                            <p class="text-base font-medium text-marcomm-dark dark:text-white">$${(competitor.keyMetrics.revenue / 1e9).toFixed(1)}B</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 dark:text-gray-400">Market Share</p>
-                            <p class="text-base font-medium text-gray-900 dark:text-white">${competitor.keyMetrics.marketShare}%</p>
+                            <p class="text-base font-medium text-marcomm-dark dark:text-white">${competitor.keyMetrics.marketShare}%</p>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-lg font-medium mb-4 text-gray-900 dark:text-white">Recent Activities</h4>
+                    <h4 class="text-lg font-light mb-4 text-marcomm-dark dark:text-white">Recent Activities</h4>
                     <div class="space-y-4">
                         ${competitor.recentActivities.map(activity => `
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">${activity.title}</p>
+                            <div class="border-l-2 border-marcomm-orange pl-4">
+                                <p class="text-sm font-medium text-marcomm-dark dark:text-white">${activity.title}</p>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">${activity.date}</p>
                             </div>
                         `).join('')}
@@ -585,7 +725,7 @@ const components = {
         `;
     }
 }
-};
+}
 
 // Application Logic
 const app = {

@@ -529,15 +529,15 @@ const app = {
             button.addEventListener('click', () => this.switchTab(button));
         });
 
-        // Export button
-        document.querySelector('button:has(.fa-file-export)').addEventListener('click', () => {
-            this.exportAnalysis();
-        });
+        // // Export button
+        // document.querySelector('button:has(.fa-file-export)').addEventListener('click', () => {
+        //     this.exportAnalysis();
+        // });
 
-        // Edit button
-        document.querySelector('button:has(.fa-edit)').addEventListener('click', () => {
-            this.editCompetitor();
-        });
+        // // Edit button
+        // document.querySelector('button:has(.fa-edit)').addEventListener('click', () => {
+        //     this.editCompetitor();
+        // });
     },
 
     renderCharts() {
@@ -585,44 +585,44 @@ const app = {
         try {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
-            this.updateOverview(analysisData.competitor);
+            // this.updateOverview(analysisData.competitor);
             this.updateCharts(analysisData.competitor);
         } catch (error) {
             console.error('Error loading competitor data:', error);
         }
     },
 
-     updateOverview(competitor) {
-        document.querySelector('[data-stat="marketCap"]').textContent = 
-            `$${(competitor.overview.marketCap / 1e9).toFixed(1)}B`;
-        document.querySelector('[data-stat="marketCapYTD"]').textContent = 
-            `${competitor.overview.marketCapYTD}% YTD`;
+    //  updateOverview(competitor) {
+    //     document.querySelector('[data-stat="marketCap"]').textContent = 
+    //         `$${(competitor.overview.marketCap / 1e9).toFixed(1)}B`;
+    //     document.querySelector('[data-stat="marketCapYTD"]').textContent = 
+    //         `${competitor.overview.marketCapYTD}% YTD`;
     
-        document.querySelector('[data-stat="revenue"]').textContent = 
-            `$${(competitor.overview.revenue / 1e9).toFixed(1)}B`;
-        document.querySelector('[data-stat="revenueYoY"]').textContent = 
-            `${competitor.overview.revenueYoY}% YoY`;
+    //     document.querySelector('[data-stat="revenue"]').textContent = 
+    //         `$${(competitor.overview.revenue / 1e9).toFixed(1)}B`;
+    //     document.querySelector('[data-stat="revenueYoY"]').textContent = 
+    //         `${competitor.overview.revenueYoY}% YoY`;
     
-        document.querySelector('[data-stat="marketShare"]').textContent = 
-            `${competitor.overview.marketShare}%`;
-        document.querySelector('[data-stat="marketShareYoY"]').textContent = 
-            `${competitor.overview.marketShareYoY}% YoY`;
+    //     document.querySelector('[data-stat="marketShare"]').textContent = 
+    //         `${competitor.overview.marketShare}%`;
+    //     document.querySelector('[data-stat="marketShareYoY"]').textContent = 
+    //         `${competitor.overview.marketShareYoY}% YoY`;
     
-        document.querySelector('[data-stat="rndSpend"]').textContent = 
-            `$${(competitor.overview.rdSpend / 1e9).toFixed(1)}B`;
-        document.querySelector('[data-stat="rndSpendYoY"]').textContent = 
-            `${competitor.overview.rdSpendYoY}% YoY`;
+    //     document.querySelector('[data-stat="rndSpend"]').textContent = 
+    //         `$${(competitor.overview.rdSpend / 1e9).toFixed(1)}B`;
+    //     document.querySelector('[data-stat="rndSpendYoY"]').textContent = 
+    //         `${competitor.overview.rdSpendYoY}% YoY`;
     
-        document.querySelector('[data-stat="patents"]').textContent = 
-            `${competitor.overview.patents}`;
-        document.querySelector('[data-stat="patentsChange"]').textContent = 
-            `+${competitor.overview.patentsChange} This Year`;
+    //     document.querySelector('[data-stat="patents"]').textContent = 
+    //         `${competitor.overview.patents}`;
+    //     document.querySelector('[data-stat="patentsChange"]').textContent = 
+    //         `+${competitor.overview.patentsChange} This Year`;
     
-        // document.querySelector('[data-stat="brandValue"]').textContent = 
-        //     `$${(competitor.overview.brandValue / 1e9).toFixed(1)}B`;
-        // document.querySelector('[data-stat="brandValueYoY"]').textContent = 
-        //     `${competitor.overview.brandValueYoY}% YoY`;
-    },
+    //     // document.querySelector('[data-stat="brandValue"]').textContent = 
+    //     //     `$${(competitor.overview.brandValue / 1e9).toFixed(1)}B`;
+    //     // document.querySelector('[data-stat="brandValueYoY"]').textContent = 
+    //     //     `${competitor.overview.brandValueYoY}% YoY`;
+    // },
     
 
     updateCharts(competitor) {

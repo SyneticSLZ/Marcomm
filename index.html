@@ -1,36 +1,37 @@
-
-
 <!DOCTYPE html>
 <html lang="en" class="dark-mode-transition">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Competitor List - Enterprise Platform</title>
+    <title>Competitor List - Marcomm Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Configure Tailwind with Starkey's colors
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        starkey: {
-                            blue: '#0072CE', // Main blue from Starkey's website
-                            dark: '#1a1a1a',
-                            gray: '#4A5568'
+                        'marcomm': {
+                            'orange': '#FF6B35',
+                            'orange-light': '#FF8B5F',
+                            'orange-dark': '#E55A24',
+                            'dark': '#333333',
+                            'gray': '#F5F5F5',
+                            'gray-dark': '#1F2937',
                         }
+                    },
+                    fontFamily: {
+                        'sans': ['system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Dark mode transitions */
         .dark-mode-transition {
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        /* Improved select styling for dark mode */
         select {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 0.5rem center;
@@ -38,7 +39,6 @@
             background-size: 1.5em 1.5em;
             padding-right: 2.5rem;
             -webkit-appearance: none;
-            -moz-appearance: none;
             appearance: none;
         }
         
@@ -49,68 +49,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+<body class="bg-gray-50 dark:bg-marcomm-gray-dark transition-colors duration-200">
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
-        <!-- Navigation content remains the same -->
-        <nav class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <img src="./starkey-seeklogo.svg" width="120" height="70" alt="Starkey Logo"  class="dark:brightness-200">
-                        </div>
-                        <div class="hidden md:block"> 
-                            <div class="ml-10 flex items-baseline space-x-4">
-                                <a href="./indexold.html" style="display: none;" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Dashboard</a>
-                                <a href="./index.html" class="bg-starkey-blue text-white px-3 py-2 rounded-md text-sm font-medium">Companies</a>
-                                <!-- <a href="./updatedindex.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Industry</a> -->
-                                <a href="./startups.html" style="display: none;" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Startups</a>
-                                <a href="./Intelligence.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Intelligence</a>
-                                <a href="./reports.html" style="display: none;" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Reports</a>
-                                <a href="./settings.html"  style="display: none;"class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Settings</a>
-                            </div>
-                        </div>
+    <nav class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-marcomm-orange text-2xl font-bold">MARCOMM</span>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <!-- Dark Mode Toggle -->
-                        <button id="dark-mode-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <i class="fas fa-sun dark:hidden"></i>
-                            <i class="fas fa-moon hidden dark:inline"></i>
-                        </button>
-                    
-                        
-                        <div class="flex items-center"style="display: none;">
-                            <button class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                                <i class="fas fa-bell"></i>
-                            </button>
-                            <button class="ml-2 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                                <i class="fas fa-user-circle"></i>
-                            </button>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="./index.html" class="bg-marcomm-orange text-white px-3 py-2 rounded text-sm font-medium hover:bg-marcomm-orange-light transition-colors">Companies</a>
+                            <a href="./Intelligence.html" class="text-gray-600 dark:text-gray-300 hover:text-marcomm-orange dark:hover:text-marcomm-orange-light px-3 py-2 text-sm font-medium" >Intelligence</a>
                         </div>
                     </div>
                 </div>
+                <div class="flex items-center">
+                    <button id="darkModeToggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-sun dark:hidden"></i>
+                        <i class="fas fa-moon hidden dark:inline"></i>
+                    </button>
+                </div>
             </div>
-        </nav>
+        </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <main class="min-h-screen bg-gray-50 dark:bg-marcomm-gray-dark transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Header with Filters -->
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-200">Competitor Analysis</h1>
-                    <!-- <button id="add-competitor-btn" class="px-4 py-2 bg-starkey-blue hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-plus mr-2"></i>Add Competitor
-                    </button> -->
+                    <h1 class="text-3xl font-light text-marcomm-dark dark:text-white transition-colors duration-200">Competitor Analysis</h1>
                 </div>
-
-
             </div>
 
             <!-- Competitor List Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden transition-colors duration-200">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
@@ -144,56 +119,45 @@
     <!-- Quick View Modal -->
     <div id="quick-view-modal" class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-90 hidden transition-all duration-200">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-4xl w-full mx-4 shadow-xl transition-all duration-200" >
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-4xl w-full mx-4 shadow-xl">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-200">Competitor Quick View</h3>
-                    <button onclick="app.hideQuickView()" class="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200">
+                    <h3 class="text-2xl font-light text-marcomm-dark dark:text-white">Competitor Quick View</h3>
+                    <button onclick="app.hideQuickView()" class="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div id="quick-view-content" class="text-gray-900 dark:text-white transition-colors duration-200">
-                    <!-- Quick view content will be inserted here -->
-                </div>
+                <div id="quick-view-content"></div>
             </div>
         </div>
     </div>
 
     <script src="competitor-list.js"></script>
     <script>
-        // Enhanced Dark mode functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Check system preference initially
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const savedDarkMode = localStorage.getItem('darkMode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const html = document.documentElement;
+
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                            (!localStorage.getItem('darkMode') && 
+                             window.matchMedia('(prefers-color-scheme: dark)').matches);
             
-            // Set initial dark mode based on saved preference or system preference
-            if (savedDarkMode !== null) {
-                if (savedDarkMode === 'true') {
-                    document.documentElement.classList.add('dark');
-                }
-            } else if (prefersDark) {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('darkMode', 'true');
+            if (darkMode) {
+                html.classList.add('dark');
             }
 
-            // Dark mode toggle functionality
-            const darkModeToggle = document.getElementById('dark-mode-toggle');
             darkModeToggle.addEventListener('click', function() {
-                document.documentElement.classList.toggle('dark');
-                const isDark = document.documentElement.classList.contains('dark');
-                localStorage.setItem('darkMode', isDark);
-                
-                // Update button aria-label for accessibility
-                this.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+                html.classList.toggle('dark');
+                localStorage.setItem('darkMode', html.classList.contains('dark'));
             });
 
-            // Listen for system dark mode changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
                 if (localStorage.getItem('darkMode') === null) {
                     if (e.matches) {
-                        document.documentElement.classList.add('dark');
+                        html.classList.add('dark');
+                        localStorage.setItem('darkMode', 'true');
                     } else {
-                        document.documentElement.classList.remove('dark');
+                        html.classList.remove('dark');
+                        localStorage.setItem('darkMode', 'false');
                     }
                 }
             });
