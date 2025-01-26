@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competitor Metrics Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .output {
+      margin-top: 20px;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Competitor Metrics Dashboard</h1>
+    <input id="inputField" type="text" placeholder="Enter username or domain">
+    <button id="fetchButton">Fetch Metrics</button>
+    <div id="output" class="output"></div>
+  </div>
+  <script>
+const fetchButton = document.getElementById("fetchButton");
+const inputField = document.getElementById("inputField");
+const output = document.getElementById("output");
+
+// Replace these with your actual tokens or keys
+const TWITTER_BEARER_TOKEN = "your_twitter_api_token";
+const FACEBOOK_ACCESS_TOKEN = "your_facebook_api_token";
+const GOOGLE_API_KEY = "your_google_api_key";
+
+fetchButton.addEventListener("click", async () => {
+  const query = inputField.value.trim();
+  if (!query) {
+    output.textContent = "Please enter a username or domain.";
+    return;
+  }
+
+  output.textContent = "Fetching metrics...";
+
+  try {
+    // const twitterData = await fetchTwitterData(query);
+    const facebookData = await fetchFacebookData(query);
+    // const websiteData = await fetchWebsiteData(query);
+
+    output.textContent = `
+Twitter Data:\n${JSON.stringify(twitterData, null, 2)}\n
+Facebook Data:\n${JSON.stringify(facebookData, null, 2)}\n
+Website Data:\n${JSON.stringify(websiteData, null, 2)}\n
+    `;
+  } catch (error) {
+    output.textContent = `Error fetching data: ${error.message}`;
+  }
+});
+
+async function fetchTwitterData(username) {
+  const url = `https://api.twitter.com/2/users/by/username/${username}`;
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${TWITTER_BEARER_TOKEN}` },
+  });
+  if (!response.ok) throw new Error("Twitter API error");
+  return response.json();
+}
+
+async function fetchFacebookData(pageId) {
+  const url = `https://graph.facebook.com/v12.0/${pageId}?fields=fan_count,engagement&access_token=${FACEBOOK_ACCESS_TOKEN}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Facebook API error");
+  return response.json();
+}
+
+async function fetchWebsiteData(domain) {
+  const url = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${domain}&key=${GOOGLE_API_KEY}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Google Pagespeed API error");
+  return response.json();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industry Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .loading-skeleton {
+            animation: skeleton-loading 1s linear infinite alternate;
+        }
+        @keyframes skeleton-loading {
+            0% { background-color: hsl(200, 20%, 80%); }
+            100% { background-color: hsl(200, 20%, 95%); }
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="w-10 h-10 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <select id="clientSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <!-- <option selected>Select Client</option> -->
+                            <option value="">Medtronic</option>
+                        </select>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+
+                            <a href="./index.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium" >Dashboard</a>
+                            <a href="./complist.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Companies</a>
+                            <a href="#" class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium">Industry</a>
+                            <a href="./startups.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Startups</a>
+                            <a href="./Intelligence.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Intelligence</a>
+                            <a href="./reports.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Reports</a>
+                            <a href="./settings.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Settings</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button id="refreshData" class="mr-4 p-2 rounded-full text-gray-600 hover:bg-gray-100">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <div class="relative">
+                        <input type="text" class="bg-gray-100 rounded-full px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="Search industry data...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dashboard Header -->
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900" id="industryTitle">Industry Dashboard</h1>
+                <p class="mt-2 text-gray-600" id="industryDescription">Select a client to view industry insights</p>
+            </div>
+            <div class="flex space-x-2">
+                <span id="lastUpdated" class="text-sm text-gray-500"></span>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" id="quick-stats">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">New Patents (30d)</h3>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" id="patentCount">-</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">FDA Filings (30d)</h3>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" id="fdaCount">-</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">Funding Rounds (30d)</h3>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" id="fundingCount">-</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">News Mentions (7d)</h3>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" id="newsCount">-</p>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Industry News -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Recent Industry News</h2>
+                    <button class="text-sm text-blue-500 hover:text-blue-700">View All</button>
+                </div>
+                <div id="newsContainer" class="space-y-4">
+                    <!-- News items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Patent Activity -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Patent Activity</h2>
+                    <button class="text-sm text-blue-500 hover:text-blue-700">View All</button>
+                </div>
+                <div id="patentContainer" class="space-y-4">
+                    <!-- Patent items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- FDA Filings -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">FDA Filings</h2>
+                    <button class="text-sm text-blue-500 hover:text-blue-700">View All</button>
+                </div>
+                <div id="fdaContainer" class="space-y-4">
+                    <!-- FDA items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Funding Activity -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Recent Funding</h2>
+                    <button class="text-sm text-blue-500 hover:text-blue-700">View All</button>
+                </div>
+                <div id="fundingContainer" class="space-y-4">
+                    <!-- Funding items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <p class="mt-4 text-gray-600">Loading industry data...</p>
+        </div>
+    </div>
+
+    <script>
+        // Simulated client database
+        const clientsDatabase = {
+            "3M": {
+                industry: "Manufacturing",
+                subIndustries: ["Industrial", "Healthcare", "Consumer"],
+                competitors: ["Honeywell", "DuPont", "GE"],
+                keywords: ["manufacturing", "industrial", "adhesives", "PPE"]
+            },
+            "Medtronic": {
+                industry: "Healthcare",
+                subIndustries: ["Medical Devices", "Healthcare Technology"],
+                competitors: ["Boston Scientific", "Abbott", "Johnson & Johnson"],
+                keywords: ["medical device", "healthcare", "medical technology"]
+            },
+            "Cargill": {
+                industry: "Agriculture",
+                subIndustries: ["Food Processing", "Agricultural Trading"],
+                competitors: ["ADM", "Bunge", "Louis Dreyfus"],
+                keywords: ["agriculture", "food processing", "commodities"]
+            },
+            "Voya Financial": {
+                industry: "Financial Services",
+                subIndustries: ["Insurance", "Investment Management"],
+                competitors: ["Principal Financial", "Prudential", "MetLife"],
+                keywords: ["financial services", "insurance", "investment"]
+            },
+            "Pearson": {
+                industry: "Education",
+                subIndustries: ["Educational Publishing", "EdTech"],
+                competitors: ["McGraw Hill", "Houghton Mifflin", "Cengage"],
+                keywords: ["education", "publishing", "learning"]
+            }
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeClientDropdown();
+            setupEventListeners();
+            updateLastRefreshTime();
+        });
+
+        function initializeClientDropdown() {
+            const select = document.getElementById('clientSelect');
+            Object.keys(clientsDatabase).forEach(client => {
+                const option = document.createElement('option');
+                option.value = client;
+                option.textContent = client;
+                select.appendChild(option);
+            });
+        }
+
+
+        
+
+        function setupEventListeners() {
+            // Client selection change
+            document.getElementById('clientSelect').addEventListener('change', function(e) {
+                const client = e.target.value;
+                if (clientsDatabase[client]) {
+                    updateDashboard(client);
+                }
+            });
+
+            // Refresh button
+            document.getElementById('refreshData').addEventListener('click', function() {
+                const client = document.getElementById('clientSelect').value;
+                if (clientsDatabase[client]) {
+                    updateDashboard(client, true);
+                }
+            });
+        }
+
+        function updateDashboard(client, showLoading = true) {
+            if (showLoading) {
+                document.getElementById('loading-overlay').classList.remove('hidden');
+            }
+
+            const clientData = clientsDatabase[client];
+            updateHeaderInfo(client, clientData);
+            
+            // Fetch all data in parallel
+            Promise.all([
+                fetchNews(clientData),
+                fetchPatents(clientData),
+                fetchFDAFilings(clientData),
+                fetchFundingRounds(clientData)
+            ]).then(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                updateLastRefreshTime();
+            }).catch(error => {
+                console.error('Error updating dashboard:', error);
+                document.getElementById('loading-overlay').classList.add('hidden');
+            });
+        }
+
+        function updateHeaderInfo(client, clientData) {
+            document.getElementById('industryTitle').textContent = `${clientData.industry} Industry Overview`;
+            document.getElementById('industryDescription').textContent = 
+                `Monitoring ${clientData.subIndustries.join(', ')} for ${client}`;
+        }
+
+        async function fetchNews(clientData) {
+            try {
+                const response = await fetch('https://intelbackend.onrender.com/api/news', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        keywords: clientData.keywords,
+                        industry: clientData.industry
+                    })
+                });
+                
+                const data = await response.json();
+                updateNewsContainer(data);
+                updateQuickStats('newsCount', data.length);
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        }
+
+        async function fetchPatents(clientData) {
+            try {
+                const response = await fetch('https://intelbackend.onrender.com/api/patents', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        industry: clientData.industry,
+                        competitors: clientData.competitors
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    updatePatentContainer(data);
+                    updateQuickStats('patentCount', data.length);
+                } else {
+                    console.error('Invalid patent data format:', data);
+                    updatePatentContainer([]);
+                    updateQuickStats('patentCount', 0);
+                }
+            } catch (error) {
+                console.error('Error fetching patents:', error);
+                updatePatentContainer([]);
+                updateQuickStats('patentCount', 0);
+            }
+        }
+
+        async function fetchFDAFilings(clientData) {
+            try {
+                const response = await fetch('https://intelbackend.onrender.com/api/fda-filings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        industry: clientData.industry
+                    })
+                });
+                const data = await response.json();
+                updateFDAContainer(data);
+                updateQuickStats('fdaCount', data.length);
+                
+                // Show/hide FDA section based on industry
+                const fdaContainer = document.getElementById('fdaContainer').parentElement;
+                if (clientData.industry === 'Healthcare') {
+                    fdaContainer.classList.remove('hidden');
+                } else {
+                    fdaContainer.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error fetching FDA filings:', error);
+            }
+        }
+
+        async function fetchFundingRounds(clientData) {
+            try {
+                const response = await fetch('https://intelbackend.onrender.com/api/funding-rounds', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        industry: clientData.industry,
+                        keywords: clientData.keywords
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    updateFundingContainer(data);
+                    updateQuickStats('fundingCount', data.length);
+                } else {
+                    console.error('Invalid funding data format:', data);
+                    updateFundingContainer([]);
+                    updateQuickStats('fundingCount', 0);
+                }
+            } catch (error) {
+                console.error('Error fetching funding rounds:', error);
+                updateFundingContainer([]);
+                updateQuickStats('fundingCount', 0);
+            }
+        }
+
+        // Add these state variables at the start of your script
+let expandedSections = {
+    news: false,
+    patents: false,
+    fda: false,
+    funding: false
+};
+
+// Update the container update functions with the following modified versions:
+
+function updateNewsContainer(news) {
+    const container = document.getElementById('newsContainer');
+    const newsToShow = expandedSections.news ? news : news.slice(0, 5);
+    const hasMore = news.length > 5;
+    
+    container.innerHTML = newsToShow.map(item => `
+        <div class="border-b border-gray-200 pb-4 fade-in">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900">${item.title}</h3>
+                <span class="text-sm text-gray-500">${formatDate(item.date)}</span>
+            </div>
+            <p class="mt-1 text-gray-600">${item.description || ''}</p>
+            <div class="mt-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    ${item.source}
+                </span>
+            </div>
+        </div>
+    `).join('');
+
+    const viewAllButton = container.parentElement.querySelector('button');
+    if (hasMore) {
+        viewAllButton.classList.remove('hidden');
+        viewAllButton.textContent = expandedSections.news ? 'Show Less' : 'View All';
+    } else {
+        viewAllButton.classList.add('hidden');
+    }
+}
+
+function updatePatentContainer(patents) {
+    const container = document.getElementById('patentContainer');
+    if (!container) return;
+    
+    if (!Array.isArray(patents)) {
+        container.innerHTML = '<p class="text-gray-500">No patent data available</p>';
+        return;
+    }
+    
+    const patentsToShow = expandedSections.patents ? patents : patents.slice(0, 5);
+    const hasMore = patents.length > 5;
+    
+    container.innerHTML = patentsToShow.map(patent => `
+        <div class="border-b border-gray-200 pb-4 fade-in">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900">${patent.title}</h3>
+                <span class="text-sm text-gray-500">${formatDate(patent.issueDate)}</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-600">Filed by: ${patent.company}</p>
+            <div class="mt-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    ${patent.status}
+                </span>
+            </div>
+        </div>
+    `).join('');
+
+    const viewAllButton = container.parentElement.querySelector('button');
+    if (hasMore) {
+        viewAllButton.classList.remove('hidden');
+        viewAllButton.textContent = expandedSections.patents ? 'Show Less' : 'View All';
+    } else {
+        viewAllButton.classList.add('hidden');
+    }
+}
+
+function updateFDAContainer(filings) {
+    const container = document.getElementById('fdaContainer');
+    const filingsToShow = expandedSections.fda ? filings : filings.slice(0, 5);
+    const hasMore = filings.length > 5;
+    
+    container.innerHTML = filingsToShow.map(filing => `
+        <div class="border-b border-gray-200 pb-4 fade-in">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900">${filing.company}</h3>
+                <span class="text-sm text-gray-500">${formatDate(filing.date)}</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-600">Type: ${filing.type}</p>
+            <div class="mt-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    ${filing.status}
+                </span>
+            </div>
+        </div>
+    `).join('');
+
+    const viewAllButton = container.parentElement.querySelector('button');
+    if (hasMore) {
+        viewAllButton.classList.remove('hidden');
+        viewAllButton.textContent = expandedSections.fda ? 'Show Less' : 'View All';
+    } else {
+        viewAllButton.classList.add('hidden');
+    }
+}
+
+function updateFundingContainer(rounds) {
+    const container = document.getElementById('fundingContainer');
+    const roundsToShow = expandedSections.funding ? rounds : rounds.slice(0, 5);
+    const hasMore = rounds.length > 5;
+    
+    container.innerHTML = roundsToShow.map(round => `
+        <div class="border-b border-gray-200 pb-4 fade-in">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900">${round.company}</h3>
+                <span class="text-sm text-gray-500">${formatDate(round.founded)}</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-600">${round.description}</p>
+            <div class="mt-2 flex justify-between items-center">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    ${round.totalFunding}
+                </span>
+                <a href="${round.website}" target="_blank" class="text-sm text-blue-500 hover:text-blue-700">
+                    Website →
+                </a>
+            </div>
+        </div>
+    `).join('');
+
+    const viewAllButton = container.parentElement.querySelector('button');
+    if (hasMore) {
+        viewAllButton.classList.remove('hidden');
+        viewAllButton.textContent = expandedSections.funding ? 'Show Less' : 'View All';
+    } else {
+        viewAllButton.classList.add('hidden');
+    }
+}
+
+// Add this to your setupEventListeners function:
+function setupViewAllButtons() {
+    // News toggle
+    document.querySelector('#newsContainer').parentElement.querySelector('button')
+        .addEventListener('click', function() {
+            expandedSections.news = !expandedSections.news;
+            fetchNews(clientsDatabase[document.getElementById('clientSelect').value]);
+        });
+
+    // Patents toggle
+    document.querySelector('#patentContainer').parentElement.querySelector('button')
+        .addEventListener('click', function() {
+            expandedSections.patents = !expandedSections.patents;
+            fetchPatents(clientsDatabase[document.getElementById('clientSelect').value]);
+        });
+
+    // FDA toggle
+    document.querySelector('#fdaContainer').parentElement.querySelector('button')
+        .addEventListener('click', function() {
+            expandedSections.fda = !expandedSections.fda;
+            fetchFDAFilings(clientsDatabase[document.getElementById('clientSelect').value]);
+        });
+
+    // Funding toggle
+    document.querySelector('#fundingContainer').parentElement.querySelector('button')
+        .addEventListener('click', function() {
+            expandedSections.funding = !expandedSections.funding;
+            fetchFundingRounds(clientsDatabase[document.getElementById('clientSelect').value]);
+        });
+}
+
+// Add this to your document.addEventListener('DOMContentLoaded', ...) block:
+setupViewAllButtons();
+        function updateQuickStats(id, count) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = count;
+            }
+        }
+
+        function updateLastRefreshTime() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = 
+                `Last updated: ${now.toLocaleTimeString()}`;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // // Initial update if a client is selected
+        // const initialClient = document.getElementById('clientSelect').value;
+        // if (initialClient && clientsDatabase[initialClient]) {
+        //     updateDashboard(initialClient, false);
+        // }
+
+        // With this:
+const select = document.getElementById('clientSelect');
+select.value = 'Medtronic';
+updateDashboard('Medtronic', false);
+    </script>
+</body>
+</html>

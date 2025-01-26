@@ -1,0 +1,394 @@
+// Market Analysis Visualization Components
+
+// Import required libraries
+// import * as XLSX from 'xlsx';
+// import _ from 'lodash';
+// import Chart from 'chart.js/auto';
+
+// Constants and Configuration
+const CHART_COLORS = {
+  brands: {
+    'GN Resound': { primary: '#3b82f6', secondary: '#93c5fd' },
+    'Oticon': { primary: '#10b981', secondary: '#6ee7b7' },
+    'WS Audiology': { primary: '#8b5cf6', secondary: '#a78bfa' },
+    'Sonova/Phonak': { primary: '#f59e0b', secondary: '#fcd34d' },
+    'Starkey': { primary: '#ef4444', secondary: '#fca5a5' }
+  },
+  positive: '#10b981',
+  negative: '#ef4444',
+  neutral: '#6b7280'
+};
+
+// Main visualization class
+class MarketVisualizer {
+  constructor(containerId) {
+    this.container = document.getElementById(containerId);
+    this.charts = new Map();
+    this.initializeContainer();
+  }
+
+  initializeContainer() {
+    this.container.innerHTML = '';
+    this.container.className = 'p-6 space-y-8 bg-white dark:bg-gray-900 transition-colors duration-200';
+  }
+
+  async visualizeMarketData() {
+    try {
+      const marketData = await this.processAllFiles();
+      this.renderDashboard(marketData);
+    } catch (error) {
+      this.showError(error);
+    }
+  }
+
+  async processAllFiles() {
+    const files = [
+      'Group 1 ITE.xlsx',
+      'Group 1 Cat 2 ITE Rechargeable.xlsx',
+      'Group 2 BTE.xlsx',
+      'Group 2 Cat 2 BTE Rechargeable.xlsx',
+      'Group 3 RIC.xlsx',
+      'Group 3 RIC  R.xlsx',
+      'Group 4 Wireless.xlsx',
+      'Group 6 Remotes.xlsx',
+      'Group 7  CROS NonR.xlsx',
+      'Group 7 CROS R.xlsx',
+      'Group 8 CI Comp.xlsx'
+    ];
+
+    const marketData = {
+      categories: {},
+      overall: {
+        current: {},
+        previous: {},
+        growth: {}
+      }
+    };
+
+    for (const file of files) {
+      const data = await this.processFile(file);
+      if (data) {
+        const category = this.getCategoryFromFilename(file);
+        if (!marketData.categories[category]) {
+          marketData.categories[category] = {
+            current: {},
+            previous: {},
+            growth: {}
+          };
+        }
+
+        // Aggregate data
+        this.aggregateData(marketData, data, category);
+      }
+    }
+
+    return marketData;
+  }
+
+  async processFile(filename) {
+    try {
+      const response = await window.fs.readFile(`./data/${filename}`);
+      const workbook = XLSX.read(response, {
+        cellStyles: true,
+        cellFormulas: true,
+        cellDates: true,
+        cellNF: true,
+        sheetStubs: true
+      });
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      return this.extractSalesData(data);
+    } catch (error) {
+      console.error(`Error processing ${filename}:`, error);
+      return null;
+    }
+  }
+
+  extractSalesData(data) {
+    // Find the header row
+    const headerRowIndex = data.findIndex(row => 
+      row && row.some(cell => cell && cell.toString().toLowerCase().includes('sales'))
+    );
+
+    if (headerRowIndex === -1) return null;
+
+    const headerRow = data[headerRowIndex];
+    const octIndex = headerRow.findIndex(cell => cell && cell.toString().includes('OCT'));
+    const novIndex = headerRow.findIndex(cell => cell && cell.toString().includes('NOV'));
+
+    if (octIndex === -1 || novIndex === -1) return null;
+
+    const salesData = {
+      current: {},
+      previous: {}
+    };
+
+    // Process manufacturer rows
+    data.slice(headerRowIndex + 1).forEach(row => {
+      if (!row || !row[0]) return;
+      
+      const manufacturer = this.normalizeManufacturerName(row[0]);
+      if (!manufacturer) return;
+
+      salesData.previous[manufacturer] = parseFloat(row[octIndex]) || 0;
+      salesData.current[manufacturer] = parseFloat(row[novIndex]) || 0;
+    });
+
+    return salesData;
+  }
+
+  aggregateData(marketData, fileData, category) {
+    Object.entries(fileData.current).forEach(([manufacturer, value]) => {
+      // Category-level aggregation
+      marketData.categories[category].current[manufacturer] = 
+        (marketData.categories[category].current[manufacturer] || 0) + value;
+
+      // Overall aggregation
+      marketData.overall.current[manufacturer] = 
+        (marketData.overall.current[manufacturer] || 0) + value;
+    });
+
+    Object.entries(fileData.previous).forEach(([manufacturer, value]) => {
+      marketData.categories[category].previous[manufacturer] = 
+        (marketData.categories[category].previous[manufacturer] || 0) + value;
+      
+      marketData.overall.previous[manufacturer] = 
+        (marketData.overall.previous[manufacturer] || 0) + value;
+    });
+  }
+
+  renderDashboard(marketData) {
+    this.container.innerHTML = '';
+
+    // Add summary section
+    this.addSummarySection(marketData);
+
+    // Add overall market share chart
+    this.addMarketShareChart(marketData);
+
+    // Add growth comparison chart
+    this.addGrowthChart(marketData);
+
+    // Add category breakdown
+    this.addCategoryBreakdown(marketData);
+
+    // Add detailed analysis table
+    this.addDetailedAnalysis(marketData);
+  }
+
+  addSummarySection(marketData) {
+    const metrics = this.calculateSummaryMetrics(marketData);
+    const summaryContainer = document.createElement('div');
+    summaryContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8';
+
+    const cards = [
+      {
+        title: 'Market Leader',
+        value: metrics.leader.name,
+        subtext: `${metrics.leader.share.toFixed(1)}% market share`,
+        trend: null,
+        color: 'blue'
+      },
+      {
+        title: 'Fastest Growing',
+        value: metrics.fastestGrowing.name,
+        subtext: `${metrics.fastestGrowing.growth > 0 ? '+' : ''}${metrics.fastestGrowing.growth.toFixed(1)}% growth`,
+        trend: 'up',
+        color: 'green'
+      },
+      {
+        title: 'Total Market Size',
+        value: this.formatCurrency(metrics.totalMarket.current),
+        subtext: `${metrics.totalMarket.growth > 0 ? '+' : ''}${metrics.totalMarket.growth.toFixed(1)}% vs previous`,
+        trend: metrics.totalMarket.growth > 0 ? 'up' : 'down',
+        color: 'purple'
+      },
+      {
+        title: 'Market Concentration',
+        value: `${metrics.concentration.toFixed(1)}%`,
+        subtext: 'Top 3 manufacturers',
+        trend: null,
+        color: 'amber'
+      }
+    ];
+
+    cards.forEach(card => {
+      summaryContainer.appendChild(this.createMetricCard(card));
+    });
+
+    this.container.appendChild(summaryContainer);
+  }
+
+  addMarketShareChart(marketData) {
+    const chartContainer = this.createChartContainer('Market Share Comparison');
+    const ctx = chartContainer.querySelector('canvas').getContext('2d');
+
+    const manufacturers = Object.keys(marketData.overall.current);
+    const currentShares = this.calculateMarketShares(marketData.overall.current);
+    const previousShares = this.calculateMarketShares(marketData.overall.previous);
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: manufacturers,
+        datasets: [
+          {
+            label: 'Current Month',
+            data: manufacturers.map(m => currentShares[m]),
+            backgroundColor: manufacturers.map(m => CHART_COLORS.brands[m].primary),
+            borderWidth: 1
+          },
+          {
+            label: 'Previous Month',
+            data: manufacturers.map(m => previousShares[m]),
+            backgroundColor: manufacturers.map(m => CHART_COLORS.brands[m].secondary),
+            borderWidth: 1
+          }
+        ]
+      },
+      options: this.getChartOptions('Market Share (%)')
+    });
+
+    this.container.appendChild(chartContainer);
+  }
+
+  addGrowthChart(marketData) {
+    const chartContainer = this.createChartContainer('Growth Rate Comparison');
+    const ctx = chartContainer.querySelector('canvas').getContext('2d');
+
+    const manufacturers = Object.keys(marketData.overall.current);
+    const growthRates = manufacturers.map(m => ({
+      manufacturer: m,
+      growth: this.calculateGrowthRate(
+        marketData.overall.previous[m],
+        marketData.overall.current[m]
+      )
+    })).sort((a, b) => b.growth - a.growth);
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: growthRates.map(g => g.manufacturer),
+        datasets: [{
+          label: 'Growth Rate',
+          data: growthRates.map(g => g.growth),
+          backgroundColor: growthRates.map(g => {
+            const color = CHART_COLORS.brands[g.manufacturer].primary;
+            return g.growth >= 0 ? color : this.adjustColorOpacity(color, 0.5);
+          }),
+          borderWidth: 1
+        }]
+      },
+      options: this.getChartOptions('Growth Rate (%)')
+    });
+
+    this.container.appendChild(chartContainer);
+  }
+
+  addCategoryBreakdown(marketData) {
+    Object.entries(marketData.categories).forEach(([category, data]) => {
+      const sectionContainer = document.createElement('div');
+      sectionContainer.className = 'mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg';
+
+      const header = document.createElement('h3');
+      header.className = 'text-xl font-bold mb-6 text-gray-900 dark:text-gray-100';
+      header.textContent = this.formatCategoryName(category);
+
+      sectionContainer.appendChild(header);
+
+      // Add category metrics
+      const metrics = this.calculateCategoryMetrics(data);
+      const metricsContainer = this.createCategoryMetricsGrid(metrics);
+      sectionContainer.appendChild(metricsContainer);
+
+      // Add category chart
+      const chartContainer = document.createElement('div');
+      chartContainer.className = 'h-80 mt-6';
+      const canvas = document.createElement('canvas');
+      chartContainer.appendChild(canvas);
+      sectionContainer.appendChild(chartContainer);
+
+      this.createCategoryChart(canvas, data);
+
+      this.container.appendChild(sectionContainer);
+    });
+  }
+
+  addDetailedAnalysis(marketData) {
+    const container = document.createElement('div');
+    container.className = 'mt-8';
+
+    const table = this.createDetailedTable(marketData);
+    container.appendChild(table);
+
+    this.container.appendChild(container);
+  }
+
+  // Utility methods
+  normalizeManufacturerName(name) {
+    if (!name || typeof name !== 'string') return null;
+    const normalized = name.trim();
+    const mapping = {
+      'GN RESOUND': 'GN Resound',
+      'SONOVA': 'Sonova/Phonak',
+      'PHONAK': 'Sonova/Phonak'
+    };
+    return mapping[normalized.toUpperCase()] || normalized;
+  }
+
+  formatCurrency(value) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  formatPercent(value) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }).format(value / 100);
+  }
+
+  getCategoryFromFilename(filename) {
+    if (filename.includes('ITE')) return 'ITE';
+    if (filename.includes('BTE')) return 'BTE';
+    if (filename.includes('RIC')) return 'RIC';
+    if (filename.includes('Wireless')) return 'Wireless';
+    if (filename.includes('Remotes')) return 'Remotes';
+    if (filename.includes('CROS')) return 'CROS';
+    if (filename.includes('CI')) return 'CI';
+    return 'Other';
+  }
+
+  calculateMarketShares(salesData) {
+    const total = Object.values(salesData).reduce((sum, value) => sum + value, 0);
+    const shares = {};
+    Object.entries(salesData).forEach(([manufacturer, value]) => {
+      shares[manufacturer] = (value / total) * 100;
+    });
+    return shares;
+  }
+
+  calculateGrowthRate(previous, current) {
+    if (!previous) return 0;
+    return ((current - previous) / previous) * 100;
+  }
+
+  showError(error) {
+    this.container.innerHTML = `
+      <div class="p-6 bg-red-50 dark:bg-red-900/30 rounded-lg">
+        <h3 class="text-xl font-bold text-red-800 dark:text-red-200">Error Loading Data</h3>
+        <p class="text-red-600 dark:text-red-300 mt-2">${error.message}</p>
+      </div>
+    `;
+  }
+}
+
+// Export the visualizer
+export default MarketVisualizer;

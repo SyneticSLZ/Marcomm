@@ -1,0 +1,187 @@
+
+
+<!-- <body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <nav class="bg-white dark:bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="./starkey-seeklogo.svg" width="120" height="70" alt="Logo" class="dark:brightness-200">
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <-- <a href="./indexold.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --
+                            <a href="./index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Companies</a>
+                            <a href="#" class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium">Intelligence</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button onclick="toggleDarkMode()" id="dark-mode-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <-- <i class="fas fa-moon"></i> --
+                        <i class="fas fa-sun dark:hidden"></i>
+                        <i class="fas fa-moon hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav> -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Market Intelligence</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            // Tailwind configuration
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'marcomm': {
+                                'orange': '#FF6B35',
+                                'orange-light': '#FF8B5F',
+                                'orange-dark': '#E55A24',
+                                'dark': '#333333',
+                                'gray': '#F5F5F5',
+                                'gray-dark': '#1F2937',
+                            }
+                        },
+                        fontFamily: {
+                            'sans': ['system-ui', '-apple-system', 'sans-serif'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50 dark:bg-marcomm-gray-dark transition-colors duration-200">
+        <nav class="bg-white dark:bg-gray-800 shadow-md">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="text-marcomm-orange text-2xl font-bold">MARCOMM</span>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="./index.html" class="text-gray-600 dark:text-gray-300 hover:text-marcomm-orange dark:hover:text-marcomm-orange-light px-3 py-2 text-sm font-medium">Companies</a>
+                                <a href="#" class="bg-marcomm-orange text-white px-3 py-2 rounded text-sm font-medium hover:bg-marcomm-orange-light transition-colors">Intelligence</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="darkModeToggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-sun dark:hidden"></i>
+                            <i class="fas fa-moon hidden dark:inline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-4xl font-light text-marcomm-dark mb-2 dark:text-white">Market Intelligence Dashboard</h1>
+                <p class="text-gray-600">Comprehensive analysis of the industry landscape</p>
+            </div>
+    
+            <!-- Market Overview -->
+            <div id="market-overview" class="mb-8 "></div>
+    
+            <!-- Competitive Map -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                <div id="competitive-map" class="md:col-span-1"></div>
+                <div class="md:col-span-2 bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">Quick Stats</h3>
+                    <div id="quick-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+    
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                <div class="bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">Market Share Distribution</h3>
+                    <canvas id="market-share-chart"></canvas>
+                </div>
+    
+                <div class="bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">Financial Performance Radar</h3>
+                    <canvas id="financial-radar-chart"></canvas>
+                </div>
+    
+                <div class="bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">FDA Metrics Analysis</h3>
+                    <canvas id="fda-metrics-chart"></canvas>
+                </div>
+    
+                <div class="bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">Patent Portfolio Analysis</h3>
+                    <canvas id="patents-chart"></canvas>
+                </div>
+            </div>
+    
+            <!-- Competitive Insights -->
+            <div class="mt-8">
+                <div class="bg-white rounded shadow-sm p-6 dark:bg-marcomm-gray-dark transition-colors duration-200">
+                    <h3 class="text-xl font-light text-marcomm-dark mb-4 dark:text-white">Market Insights</h3>
+                    <div id="competitive-insights" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+            </div>
+        </div>
+
+        <script src="sonovaData.js"></script>
+        <script src="gnData.js"></script>
+        <script src="wsData.js"></script>
+        <script src="DemantData.js"></script>
+        <script src="intelligence-module.js"></script>
+        <script>
+            // Dark mode initialization and toggle functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                const html = document.documentElement;
+    
+                // Check for saved theme preference or system preference
+                const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                                (!localStorage.getItem('darkMode') && 
+                                 window.matchMedia('(prefers-color-scheme: dark)').matches);
+                
+                // Set initial dark mode state
+                if (darkMode) {
+                    html.classList.add('dark');
+                    toggleDarkMode()
+                }
+    
+                // Toggle dark mode
+                darkModeToggle.addEventListener('click', function() {
+                    html.classList.toggle('dark');
+                    localStorage.setItem('darkMode', html.classList.contains('dark'));
+                    if (typeof renderAllCharts === 'function') {
+                        renderAllCharts();
+                    }
+                });
+    
+                // Listen for system dark mode changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                    if (localStorage.getItem('darkMode') === null) {
+                        if (e.matches) {
+                            html.classList.add('dark');
+                            localStorage.setItem('darkMode', 'true');
+                        } else {
+                            html.classList.remove('dark');
+                            localStorage.setItem('darkMode', 'false');
+                        }
+                        if (typeof renderAllCharts === 'function') {
+                            renderAllCharts();
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+    </html>

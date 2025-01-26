@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Generation - Enterprise Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="./starkey-seeklogo.svg"   width="120" height="70 "alt="">
+                        <!-- <img src="./starkey-seeklogo.svg"   width="120" height="70 "alt=""> -->
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="./index.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium" >Dashboard</a>
+                            <a href="./complist.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Companies</a>
+                            <a href="./startups.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Startups</a>
+                            <a href="./Intelligence.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Intelligence</a>
+                            <a href="#" class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium">Reports</a>
+                            <a href="./settings.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Settings</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <input type="text" class="bg-gray-100 rounded-full px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search companies, patents, news...">
+                    </div>
+                    <div class="ml-4 flex items-center">
+                        <button class="p-2 rounded-full text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button class="ml-2 p-2 rounded-full text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-user-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Report Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Report Generator</h1>
+                <p class="mt-2 text-gray-600">Create customized intelligence reports</p>
+            </div>
+            <div class="flex space-x-4">
+                <button id="preview-report" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    <i class="fas fa-eye mr-2"></i>Preview
+                </button>
+                <button id="generate-report" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    <i class="fas fa-file-export mr-2"></i>Generate
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Configuration -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Report Template -->
+            <div class="col-span-1">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Report Template</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Template Type</label>
+                            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option>Competitive Analysis</option>
+                                <option>Market Intelligence</option>
+                                <option>Technology Assessment</option>
+                                <option>Executive Summary</option>
+                                <option>Custom Template</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Report Format</label>
+                            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option>PDF Report</option>
+                                <option>Interactive Web Page</option>
+                                <option>PowerPoint Presentation</option>
+                                <option>Excel Dashboard</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Selection -->
+            <div class="col-span-1">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Content Selection</h3>
+                    <div class="space-y-2" id="content-sections">
+                        <!-- Content sections will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Options -->
+            <div class="col-span-1">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Report Options</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Include Executive Summary</label>
+                            <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300" checked>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Include Visualizations</label>
+                            <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300" checked>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Include Raw Data</label>
+                            <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Include AI Insights</label>
+                            <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300" checked>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Preview -->
+        <div class="mt-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">Report Preview</h3>
+                <div id="report-preview" class="border rounded-lg p-4 min-h-[400px]">
+                    <!-- Report preview will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="report-module.js"></script>
+</body>
+</html>

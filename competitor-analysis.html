@@ -1,0 +1,3862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analysis - Enterprise Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        // Configure Tailwind with Starkey's colors
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        starkey: {
+                            blue: '#0072CE',
+                            dark: '#1a1a1a',
+                            gray: '#4A5568'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dark-mode-transition {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Navigation (Same as list view) -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="./starkey-seeklogo.svg" width="120" height="70" alt="Starkey Logo" class="dark:brightness-200">
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="./indexold.html" style="display: none;" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Dashboard
+                        </a>
+                        <a href="./" 
+                           class="bg-starkey-blue text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Companies
+                        </a>
+                        <!-- <a href="./updatedindex.html" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Industry
+                        </a> -->
+                        <a href="./startups.html" style="display: none;" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Startups
+                        </a>
+                        <a href="./Intelligence.html" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Intelligence
+                        </a>
+                        <a href="./reports.html" style="display: none;" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Reports
+                        </a>
+                        <a href="./settings.html" style="display: none;" 
+                           class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+                <div class="flex items-center space-x-4">
+                    <div id="dark-mode-toggle" 
+                    class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <i class="fas fa-sun dark:hidden"></i>
+                <i class="fas fa-moon hidden dark:inline"></i>
+            </div>
+            <div class="relative" style="display: none;">
+                <div id="search-input" ></div>
+                <div id="view-toggle"></div>
+
+                <input type="text" id="search-input" 
+                       class="bg-gray-100 dark:bg-gray-700 dark:text-white rounded-full px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-starkey-blue transition-colors duration-200" 
+                       placeholder="Search competitors...">
+            </div>
+            <button id="view-toggle" style="display: none;"
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md flex items-center transition-colors duration-200">
+                <i class="fas fa-table-list mr-2"></i>
+                <span>View Style</span>
+            </button>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <nav class="bg-white shadow-lg">
+        <!-- ... Navigation content ... -->
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Company Overview -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8 transition-colors duration-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center space-x-4">
+                        <h1 id="title" class="text-3xl font-bold text-gray-900 dark:text-white">3M Corporation</h1>
+                        <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">Manufacturing</span>
+                    </div>
+                    <p id="industry" class="mt-2 text-gray-600 dark:text-gray-400">Global manufacturing and technology company</p>
+                </div>
+                <div class="flex space-x-4" style="display: none;">
+                    <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
+                        <i class="fas fa-file-export mr-2"></i>Export Analysis
+                    </button>
+                    <button class="px-4 py-2 bg-starkey-blue text-white rounded hover:bg-blue-600 transition-colors duration-200">
+                        <i class="fas fa-edit mr-2"></i>Edit Details
+                    </button>
+                </div>
+            </div>
+        </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-6 gap-6 mt-6" style="display: none;">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Market Cap</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="marketCap">$112.5B</p>
+                    <p class="text-sm text-green-600" data-stat="marketCapYTD">+2.3% YTD</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Revenue</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="revenue">$35.2B</p>
+                    <p class="text-sm text-green-600" data-stat="revenueYoY">+12.4% YoY</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Market Share</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="marketShare">15.3%</p>
+                    <p class="text-sm text-green-600" data-stat="marketShareYoY">+0.8% YoY</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">R&D Spend</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="rndSpend">$2.1B</p>
+                    <p class="text-sm text-green-600" data-stat="rndSpendYoY">+15.2% YoY</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Patents Filed</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="patents">542</p>
+                    <p class="text-sm text-green-600" data-stat="patentsChange">+24 This Year</p>
+                </div>
+            </div>
+            
+
+
+        <!-- Analysis Tabs -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+            <div class="border-b border-gray-200 dark:border-gray-700">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button class="tab-button text-starkey-blue dark:text-blue-400 whitespace-nowrap py-4 px-1 border-b-2 border-starkey-blue font-medium text-sm transition-colors duration-200">
+                        Market Analysis
+                    </button>
+                    <button class="tab-button text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm transition-colors duration-200">
+                        FDA Product Portfolio
+                    </button>
+                    <button class="tab-button text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm transition-colors duration-200">
+                        Technology & Patents
+                    </button>
+                    <button style="display: none;" class="tab-button text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm transition-colors duration-200">
+                        Digital Presence
+                    </button>
+                    <button class="tab-button text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm transition-colors duration-200">                       
+                        VA Affairs
+                    </button>
+                    <button class="tab-button text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm transition-colors duration-200">
+                        Financial Analysis
+                    </button>
+                </nav>
+            </div>
+        
+
+            
+
+            <!-- Analysis Content -->
+            <div class="mt-6">
+
+                <!-- Market Analysis Section -->
+<!-- Market Analysis Content -->
+<div id="market-analysis-content" class="space-y-6">
+    <!-- Recent Activity Timeline -->
+     <!-- Strategic Focus Areas -->
+      <!-- Quick Metrics Component -->
+<!-- <div class="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 transition-colors duration-200"> -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Company Quick Metrics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Revenue -->
+          <div class="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-medium text-gray-900 dark:text-white">Revenue (M)</h4>
+            </div>
+            <p id="revenue-metric" class="text-2xl font-bold text-amber-600 dark:text-amber-400">-</p>
+          </div>
+          <!-- FDA Filings -->
+          <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-medium text-gray-900 dark:text-white">FDA Filings</h4>
+            </div>
+            <p id="filings-metric" class="text-2xl font-bold text-blue-600 dark:text-blue-400">-</p>
+          </div>
+          <!-- Patents -->
+          <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-medium text-gray-900 dark:text-white">Recent Patents</h4>
+            </div>
+            <p id="patents-metric" class="text-2xl font-bold text-green-600 dark:text-green-400">-</p>
+          </div>
+          <!-- Market Share -->
+          <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-medium text-gray-900 dark:text-white">Market Share (%)</h4>
+            </div>
+            <p id="market-metric" class="text-2xl font-bold text-purple-600 dark:text-purple-400">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- </div> -->
+    <!-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+        <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Strategic Focus Areas</h3>
+        <div class="grid grid-cols-3 gap-6">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-microscope text-blue-600 dark:text-blue-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">R&D Initiatives</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Advanced Materials Research</li>
+                        <li>AI-Driven Manufacturing</li>
+                        <li>Sustainable Technologies</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-globe text-green-600 dark:text-green-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">Market Expansion</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Southeast Asia Growth</li>
+                        <li>European Market Entry</li>
+                        <li>Digital Channel Development</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-chart-pie text-purple-600 dark:text-purple-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">Business Development</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Strategic Acquisitions</li>
+                        <li>Partnership Programs</li>
+                        <li>Innovation Hub Launch</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+     -->
+    <div  id="activityContainer">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Recent Company Activity</h3>
+            <div >
+                <div class="flex">
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-lightbulb text-white"></i>   
+                        </div>
+                        <div class="flex-1 w-px bg-gray-300 dark:bg-gray-600 h-full"></div>
+                    </div>
+                    <div class="flex-1 ml-4 mb-6">
+                        <div class="font-medium text-gray-900 dark:text-white">Patent Filed: Fluorochemical Composition</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">US Patent App. 17/982,432 - Method for producing fluoropolymer materials with enhanced properties</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">December 28, 2024</div>
+                    </div>
+                </div>
+      
+                <div class="flex">
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 bg-green-500 dark:bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-file-medical text-white"></i> 
+                        </div>
+                        <div class="flex-1 w-px bg-gray-300 dark:bg-gray-600 h-full"></div>
+                    </div>
+                    <div class="flex-1 ml-4 mb-6">
+                        <div class="font-medium text-gray-900 dark:text-white">FDA 510(k) Clearance Received</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Scotchbond™ Universal Plus Adhesive - K243789</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">December 15, 2024</div>
+                    </div>
+                </div>
+      
+                <div class="flex">
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white"></i> 
+                        </div>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <div class="font-medium text-gray-900 dark:text-white">Q3 2024 Form 10-Q Filed</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Quarterly Report with SEC - Revenue $8.2B</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">November 30, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News and Market Sentiment -->
+    <div class="gap-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Latest News</h3>
+            <div class="space-y-4" id="newsContainer">
+                <!-- News items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Strategic Focus Areas
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+        <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Strategic Focus Areas</h3>
+        <div class="grid grid-cols-3 gap-6">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-microscope text-blue-600 dark:text-blue-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">R&D Initiatives</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Advanced Materials Research</li>
+                        <li>AI-Driven Manufacturing</li>
+                        <li>Sustainable Technologies</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-globe text-green-600 dark:text-green-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">Market Expansion</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Southeast Asia Growth</li>
+                        <li>European Market Entry</li>
+                        <li>Digital Channel Development</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-chart-pie text-purple-600 dark:text-purple-400 mr-2"></i>
+                    <h4 class="font-medium text-gray-900 dark:text-white">Business Development</h4>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2">
+                        <li>Strategic Acquisitions</li>
+                        <li>Partnership Programs</li>
+                        <li>Innovation Hub Launch</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div> 
+                    <!-- Product Portfolio Analysis -->
+                     <!-- Product Portfolio Analysis -->
+<!-- <div id="product-portfolio-content" class="hidden space-y-6">
+
+    <div class="border-b border-gray-200">
+        <nav class="flex -mb-px space-x-8" aria-label="FDA Intelligence Sections">
+            <button class="fda-nav-btn active px-3 py-2 text-sm font-medium" data-section="overview">
+                Overview
+            </button>
+            <button class="fda-nav-btn px-3 py-2 text-sm font-medium" data-section="portfolio">
+                Portfolio Analysis
+            </button>
+            <button class="fda-nav-btn px-3 py-2 text-sm font-medium" data-section="clinical">
+                Clinical Development
+            </button>
+            <button class="fda-nav-btn px-3 py-2 text-sm font-medium" data-section="manufacturing">
+                Manufacturing & Quality
+            </button>
+            <button class="fda-nav-btn px-3 py-2 text-sm font-medium" data-section="safety">
+                Safety & Risk
+            </button>
+        </nav>
+    </div>
+
+
+    <div class="flex justify-end">
+        <button id="refreshFDAData" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh Data
+        </button>
+    </div>
+
+ 
+    <div id="overview-section" class="fda-section space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Active Applications</h3>
+                <p id="activeApplications" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-blue-600">Currently in review</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Success Rate</h3>
+                <p id="successRate" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-green-600">Approval rate</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Clinical Trials</h3>
+                <p id="activeClinicalTrials" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-purple-600">Active trials</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Safety Profile</h3>
+                <p id="safetyScore" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-yellow-600">Risk score</p>
+            </div>
+        </div>
+
+       
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Application Types</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="applicationTypesChart" height="300"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Development Timeline</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="developmentTimelineChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Recent Regulatory Activity</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivityTable" class="bg-white divide-y divide-gray-200">
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<div id="portfolio-section" class="fda-section hidden space-y-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Products</h3>
+            <p id="totalProducts" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Across all categories</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Market Share</h3>
+            <p id="marketShare" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">In primary category</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Growth Rate</h3>
+            <p id="growthRate" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-purple-600">Year over year</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Innovation Index</h3>
+            <p id="innovationIndex" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">New molecular entities</p>
+        </div>
+    </div>
+
+   
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Product Categories Distribution</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="productCategoriesChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Market Share by Category</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="marketShareChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b">
+            <h3 class="text-lg font-medium">Development Pipeline</h3>
+        </div>
+        <div class="p-4">
+            <div class="space-y-4">
+                <div id="pipelineTimeline"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="clinical-section" class="fda-section hidden space-y-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Active Trials</h3>
+            <p id="activeTrials" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Currently running</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Trial Success Rate</h3>
+            <p id="trialSuccessRate" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Completion rate</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Enrolled Patients</h3>
+            <p id="enrolledPatients" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-purple-600">Total enrollment</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Avg Duration</h3>
+            <p id="avgTrialDuration" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">Months to completion</p>
+        </div>
+    </div>
+
+ 
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Trials by Phase</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="trialPhasesChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Therapeutic Focus</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="therapeuticFocusChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">Active Clinical Trials</h3>
+            <div class="flex space-x-2">
+                <select id="trialPhaseFilter" class="text-sm border rounded-md">
+                    <option value="all">All Phases</option>
+                    <option value="1">Phase 1</option>
+                    <option value="2">Phase 2</option>
+                    <option value="3">Phase 3</option>
+                    <option value="4">Phase 4</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Trial ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phase</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enrollment</th>
+                    </tr>
+                </thead>
+                <tbody id="activeTrialsTable" class="bg-white divide-y divide-gray-200">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="manufacturing-section" class="fda-section hidden space-y-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Facilities</h3>
+            <p id="totalFacilities" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Manufacturing sites</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Quality Score</h3>
+            <p id="qualityScore" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Average rating</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Inspection Rate</h3>
+            <p id="inspectionRate" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-purple-600">Annual per facility</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Compliance Rate</h3>
+            <p id="complianceRate" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">Meeting standards</p>
+        </div>
+    </div>
+
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Geographic Distribution</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="manufacturingLocationChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Inspection History</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="inspectionHistoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b">
+            <h3 class="text-lg font-medium">Manufacturing Facilities</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Facility</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Inspection</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="facilitiesTable" class="bg-white divide-y divide-gray-200">
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="safety-section" class="fda-section hidden space-y-6">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Safety Score</h3>
+            <p id="overallSafetyScore" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Overall rating</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Active Recalls</h3>
+            <p id="activeRecalls" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-red-600">Current recalls</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Adverse Events</h3>
+            <p id="adverseEvents" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">Last 12 months</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Response Time</h3>
+            <p id="responseTime" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Average days</p>
+        </div>
+    </div>
+
+    
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Safety Incidents by Category</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="safetyIncidentsChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Recall History</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="recallHistoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+<div id="safety-section" class="fda-section hidden space-y-6">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Safety Score</h3>
+            <p id="overallSafetyScore" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Overall rating</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Active Recalls</h3>
+            <p id="activeRecalls" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-red-600">Current recalls</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Adverse Events</h3>
+            <p id="adverseEvents" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">Last 12 months</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Response Time</h3>
+            <p id="responseTime" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Average days</p>
+        </div>
+    </div>
+
+    
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Safety Incidents by Category</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="safetyIncidentsChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Recall History</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="recallHistoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">Recent Safety Events</h3>
+            <div class="flex space-x-2">
+                <select id="safetyEventFilter" class="text-sm border rounded-md">
+                    <option value="all">All Events</option>
+                    <option value="recall">Recalls</option>
+                    <option value="adverse">Adverse Events</option>
+                    <option value="warning">Warnings</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="safetyEventsTable" class="bg-white divide-y divide-gray-200">
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b">
+            <h3 class="text-lg font-medium">Risk Analysis</h3>
+        </div>
+        <div class="p-4 space-y-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Manufacturing Risk</h4>
+                    <div class="mt-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Risk Level:</span>
+                            <span id="manufacturingRiskLevel" class="text-sm text-gray-900">-</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="manufacturingRiskBar" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Supply Chain Risk</h4>
+                    <div class="mt-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Risk Level:</span>
+                            <span id="supplyChainRiskLevel" class="text-sm text-gray-900">-</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="supplyChainRiskBar" class="bg-yellow-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Clinical Risk</h4>
+                    <div class="mt-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Risk Level:</span>
+                            <span id="clinicalRiskLevel" class="text-sm text-gray-900">-</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="clinicalRiskBar" class="bg-red-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="mt-6">
+                <h4 class="text-sm font-medium text-gray-500 mb-4">Risk Trend Analysis</h4>
+                <canvas id="riskTrendChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-4 border-b">
+            <h3 class="text-lg font-medium">Safety Recommendations</h3>
+        </div>
+        <div class="p-4">
+            <div id="safetyRecommendations" class="space-y-4">
+             
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div> -->
+                    <!-- <div id="product-portfolio-content" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow p-4">
+                                <h3 class="text-sm font-medium text-gray-500">Active Applications</h3>
+                                <p id="activeApplications" class="mt-2 text-3xl font-semibold">-</p>
+                                <p class="text-sm text-blue-600">Currently in review</p>
+                            </div>
+                            <div class="bg-white rounded-lg shadow p-4">
+                                <h3 class="text-sm font-medium text-gray-500">Approved Products</h3>
+                                <p id="approvedProducts" class="mt-2 text-3xl font-semibold">-</p>
+                                <p class="text-sm text-green-600">Total approved</p>
+                            </div>
+                            <div class="bg-white rounded-lg shadow p-4">
+                                <h3 class="text-sm font-medium text-gray-500">Recent Submissions</h3>
+                                <p id="recentSubmissions" class="mt-2 text-3xl font-semibold">-</p>
+                                <p class="text-sm text-gray-600">Last 30 days</p>
+                            </div>
+                        </div>
+                    
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-white rounded-lg shadow">
+                                <div class="p-4 border-b">
+                                    <h3 class="text-lg font-medium">Submission Types</h3>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="submissionTypesChart" height="300"></canvas>
+                                </div>
+                            </div>
+                    
+                            <div class="bg-white rounded-lg shadow">
+                                <div class="p-4 border-b">
+                                    <h3 class="text-lg font-medium">Approval Timeline</h3>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="approvalTimelineChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="mt-6 bg-white rounded-lg shadow">
+                            <div class="p-4 border-b flex justify-between items-center">
+                                <h3 class="text-lg font-medium">Recent FDA Activity</h3>
+                                <div class="flex space-x-2">
+                                    <select id="fdaStatusFilter" class="text-sm border rounded-md">
+                                        <option value="all">All Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="complete">Complete Response</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="fdaFilingsTable" class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Application #</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Updated</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="fdaTableBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">Product Portfolio Analysis</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-md font-medium mb-4">Product Categories</h4>
+                                <canvas id="product-portfolio-chart" class="w-full h-64"></canvas>
+                            </div>
+                            <div>
+                                <h4 class="text-md font-medium mb-4">Category Performance</h4>
+                                <div class="space-y-4">
+                                    <div class="bg-white p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="font-medium">Healthcare</span>
+                                            <span class="text-green-600">+15.2% YoY</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="font-medium">Industrial</span>
+                                            <span class="text-green-600">+8.7% YoY</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 72%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div> -->
+
+             
+                
+<!-- FDA Dashboard Tab Content -->
+<div id="product-portfolio-content" class="space-y-6 " >
+    <!-- Overview Statistics -->
+    <div id="stats-skeleton" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+        </div>
+    </div>
+
+    <!-- Main Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total UDI Devices</h3>
+            <p id="totalUDI" class="mt-2 text-3xl font-semibold dark:text-white">-</p>
+            <p class="text-sm text-blue-600 dark:text-blue-400">Active registrations</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">510(k) Clearances</h3>
+            <p id="total510k" class="mt-2 text-3xl font-semibold dark:text-white">-</p>
+            <p class="text-sm text-purple-600 dark:text-purple-400">Total submissions</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Registrations</h3>
+            <p id="totalRegistrations" class="mt-2 text-3xl font-semibold dark:text-white">-</p>
+            <p class="text-sm text-green-600 dark:text-green-400">Current facilities</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Adverse Events</h3>
+            <p id="totalAdverse" class="mt-2 text-3xl font-semibold dark:text-white">-</p>
+            <p class="text-sm text-red-600 dark:text-red-400">Reported incidents</p>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">Submission Trends</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="submissionTrendsChart" class="w-full" height="300"></canvas>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">Device Categories</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="deviceCategoriesChart" class="w-full" height="300"></canvas>
+            </div>
+        </div>
+    </div> -->
+    <!-- Enhanced Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Device Safety Timeline -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium dark:text-white">Device Safety Timeline</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Correlation between approvals and adverse events</p>
+        </div>
+        <div class="p-4">
+            <canvas id="fda_safety_timeline_chart_101" class="w-full" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Geographic Distribution -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium dark:text-white">Manufacturing Locations</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Distribution of manufacturing facilities by country</p>
+        </div>
+        <div class="p-4">
+            <canvas id="fda_geographic_chart_102" class="w-full" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Product Classification Analysis -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium dark:text-white">Device Classifications Over Time</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Distribution of Class I, II, and III devices</p>
+        </div>
+        <div class="p-4">
+            <canvas id="fda_classification_chart_103" class="w-full" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Device Portfolio Evolution -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium dark:text-white">Portfolio Evolution</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Product categories and lifecycle trends</p>
+        </div>
+        <div class="p-4">
+            <canvas id="fda_portfolio_chart_104" class="w-full" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+    <!-- Tab Navigation -->
+    <!-- <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav class="flex -mb-px space-x-8" aria-label="Tabs">
+            <button id="tab-udi" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                UDI Devices
+            </button>
+            <button id="tab-510k" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                510(k) Clearances
+            </button>
+            <button id="tab-registrations" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Registrations
+            </button>
+            <button id="tab-adverse" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Adverse Events
+            </button>
+        </nav>
+    </div> -->
+
+    <!-- Skeleton for Tables -->
+    <!-- <div id="table-skeleton" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden animate-pulse">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+        </div>
+        <div class="p-4">
+            <div class="space-y-4">
+                <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- UDI Devices Section -->
+    <!-- <div id="tab-content-udi" class="tab-content hidden"> -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <!-- <h3 class="text-lg font-medium dark:text-white">UDI Device Listings</h3> -->
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium dark:text-white">UDI Device Listings</h3>
+                    <input type="text"
+                           id="udiSearch"
+                           placeholder="Search devices..."
+                           class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300">
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
+                        <p class="text-sm text-blue-600 dark:text-blue-200">Commercial Distribution</p>
+                        <p id="udiActiveCount" class="text-2xl font-semibold text-blue-700 dark:text-blue-100">-</p>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-purple-900 rounded-lg p-3">
+                        <p class="text-sm text-purple-600 dark:text-purple-200">Device Categories</p>
+                        <p id="udiCategoryCount" class="text-2xl font-semibold text-purple-700 dark:text-purple-100">-</p>
+                    </div>
+                    <div class="bg-green-50 dark:bg-green-900 rounded-lg p-3">
+                        <p class="text-sm text-green-600 dark:text-green-200">Recent Listings</p>
+                        <p id="udiRecentCount" class="text-2xl font-semibold text-green-700 dark:text-green-100">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Brand Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Model</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="udiTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </tbody>
+                </table>
+                <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            Showing <span id="udiPageStart">1</span> to <span id="udiPageEnd">10</span> of <span id="udiTotal">0</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="udiPrevPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Previous</button>
+                            <button id="udiNextPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+
+    <!-- 510(k) Section -->
+    <!-- <div id="tab-content-510k" class="tab-content hidden"> -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium dark:text-white">510(k) Submissions</h3>
+                    <input type="text"
+                           id="510kSearch"
+                           placeholder="Search submissions..."
+                           class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300">
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-green-50 dark:bg-green-900 rounded-lg p-3">
+                        <p class="text-sm text-green-600 dark:text-green-200">Cleared Submissions</p>
+                        <p id="k510ClearedCount" class="text-2xl font-semibold text-green-700 dark:text-green-100">-</p>
+                    </div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-3">
+                        <p class="text-sm text-yellow-600 dark:text-yellow-200">Avg. Review Time</p>
+                        <p id="k510ReviewTime" class="text-2xl font-semibold text-yellow-700 dark:text-yellow-100">-</p>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
+                        <p class="text-sm text-blue-600 dark:text-blue-200">Recent Submissions</p>
+                        <p id="k510RecentCount" class="text-2xl font-semibold text-blue-700 dark:text-blue-100">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">K Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Device Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Decision</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="510kTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+                <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            Showing <span id="510kPageStart">1</span> to <span id="510kPageEnd">10</span> of <span id="510kTotal">0</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="510kPrevPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Previous</button>
+                            <button id="510kNextPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+
+    <!-- Registrations Section -->
+    <!-- <div id="tab-content-registrations" class="tab-content hidden"> -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium dark:text-white">Device Registrations</h3>
+                    <input type="text"
+                           id="regSearch"
+                           placeholder="Search registrations..."
+                           class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300">
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-indigo-50 dark:bg-indigo-900 rounded-lg p-3">
+                        <p class="text-sm text-indigo-600 dark:text-indigo-200">Active Facilities</p>
+                        <p id="regFacilityCount" class="text-2xl font-semibold text-indigo-700 dark:text-indigo-100">-</p>
+                    </div>
+                    <div class="bg-green-50 dark:bg-green-900 rounded-lg p-3">
+                        <p class="text-sm text-green-600 dark:text-green-200">Product Lines</p>
+                        <p id="regProductCount" class="text-2xl font-semibold text-green-700 dark:text-green-100">-</p>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-purple-900 rounded-lg p-3">
+                        <p class="text-sm text-purple-600 dark:text-purple-200">Countries</p>
+                        <p id="regCountryCount" class="text-2xl font-semibold text-purple-700 dark:text-purple-100">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Facility Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Registration No.</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Location</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrationsTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+                <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            Showing <span id="regPageStart">1</span> to <span id="regPageEnd">10</span> of <span id="regTotal">0</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="regPrevPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Previous</button>
+                            <button id="regNextPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+
+    <!-- Adverse Events Section -->
+    <!-- <div id="tab-content-adverse" class="tab-content hidden"> -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium dark:text-white">Adverse Events</h3>
+                    <input type="text"
+                           id="adverseSearch"
+                           placeholder="Search events..."
+                           class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300">
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-red-50 dark:bg-red-900 rounded-lg p-3">
+                        <p class="text-sm text-red-600 dark:text-red-200">Total Reports</p>
+                        <p id="adverseTotalCount" class="text-2xl font-semibold text-red-700 dark:text-red-100">-</p>
+                    </div>
+                    <div class="bg-orange-50 dark:bg-orange-900 rounded-lg p-3">
+                        <p class="text-sm text-orange-600 dark:text-orange-200">Recent Events</p>
+                        <p id="adverseRecentCount" class="text-2xl font-semibold text-orange-700 dark:text-orange-100">-</p>
+                    </div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-3">
+                        <p class="text-sm text-yellow-600 dark:text-yellow-200">Product Issues</p>
+                        <p id="adverseProductCount" class="text-2xl font-semibold text-yellow-700 dark:text-yellow-100">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Report Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Event Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Device</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adverseTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+                <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            Showing <span id="adversePageStart">1</span> to <span id="adversePageEnd">10</span> of <span id="adverseTotal">0</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="adversePrevPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Previous</button>
+                            <button id="adverseNextPage" class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+</div>
+
+<!-- Enhanced Modal Template -->
+<div id="detail-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-4/5 lg:w-3/4 shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="flex justify-between items-center pb-3">
+            <h3 id="modal-title" class="text-xl font-semibold dark:text-white"></h3>
+            <button id="modal-close" class="text-black dark:text-white close-modal hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="modal-content" class="mt-4 max-h-[70vh] overflow-y-auto dark:text-gray-300"></div>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loading-spinner" class="hidden fixed inset-0 bg-white dark:bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+</div>
+
+                    <!-- FDA Dashboard Tab Content -->
+<!-- <div id="product-portfolio-content" class="space-y-6" >
+
+    <div id="stats-skeleton" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="mt-2 h-8 bg-gray-200 rounded"></div>
+            <div class="mt-1 h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Drug Applications</h3>
+            <p id="totalDrugApps" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Across all categories</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Active Recalls</h3>
+            <p id="activeRecalls" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-red-600">Currently in effect</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">UDI Products</h3>
+            <p id="totalUDI" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Registered devices</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">510(k) Submissions</h3>
+            <p id="total510k" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-purple-600">Device clearances</p>
+        </div>
+    </div>
+
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    </div>
+
+<div id="table-skeleton" class="bg-white rounded-lg shadow overflow-hidden animate-pulse">
+    <div class="p-4 border-b">
+        <div class="h-6 bg-gray-200 rounded w-1/4"></div>
+    </div>
+    <div class="p-4">
+        <div class="space-y-4">
+            <div class="h-12 bg-gray-200 rounded"></div>
+            <div class="h-12 bg-gray-200 rounded"></div>
+            <div class="h-12 bg-gray-200 rounded"></div>
+            <div class="h-12 bg-gray-200 rounded"></div>
+            <div class="h-12 bg-gray-200 rounded"></div>
+        </div>
+    </div>
+</div>
+    
+    <div id="tab-content-drugs" class="tab-content hidden">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium">Drug Applications</h3>
+                <div class="flex space-x-2" >
+                    <select id="drugStatusFilter" class="text-sm border rounded-md p-2">
+                        <option value="all">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Application #</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="drugApplicationsTable" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<div id="tab-content-recalls" class="tab-content hidden">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">Product Recalls</h3>
+            <div class="flex space-x-2" style="display: none;">
+                <select id="recallStatusFilter" class="text-sm border rounded-md p-2">
+                    <option value="all">All Classifications</option>
+                    <option value="Class I">Class I</option>
+                    <option value="Class II">Class II</option>
+                    <option value="Class III">Class III</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Recall Number</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Classification</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="recallsTable" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="tab-content-udi" class="tab-content hidden">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">UDI Devices</h3>
+            <div class="flex space-x-2" >
+                <input type="text" id="udiSearch" placeholder="Search devices..." 
+                       class="text-sm border rounded-md p-2 w-64">
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Version/Model</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Device Class</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="udiTable" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="tab-content-510k" class="tab-content hidden">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">510(k) Submissions</h3>
+            <div class="flex space-x-2">
+                <select id="510kStatusFilter" class="text-sm border rounded-md p-2">
+                    <option value="all">All Status</option>
+                    <option value="SESE">Substantially Equivalent</option>
+                    <option value="NSEQ">Not Substantially Equivalent</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">K Number</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Device Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Decision</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="510kTable" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+
+<div id="detail-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-4/5 lg:w-3/4 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center pb-3">
+            <h3 id="modal-title" class="text-xl font-semibold"></h3>
+            <button id="modal-close" class="text-black close-modal hover:bg-gray-100 rounded-full p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="modal-content" class="mt-4 max-h-[70vh] overflow-y-auto"></div>
+    </div>
+</div>
+
+<div id="loading-spinner" class="hidden fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+</div>
+ -->
+
+
+                    <!-- Technology & Patents Content -->
+    <!-- <div id="technology-patents-content" class="hidden space-y-6">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Patents This Year</h3>
+                <p id="thisYearPatents" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-green-600">Since January 1st</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Total Patents</h3>
+                <p id="totalHistoricalPatents" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-blue-600">last 6 months</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500">Pending Applications</h3>
+                <p id="pendingPatents" class="mt-2 text-3xl font-semibold">-</p>
+                <p class="text-sm text-yellow-600">Under review</p>
+            </div>
+        </div>
+        
+        
+        <div class="mt-6 bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Most Recent Patents (2024)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patent Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filing Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Citations</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="recentPatentsTable">
+                     
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-medium">Patent Categories</h3>
+                    </div>
+                    <div class="p-4">
+                        <canvas id="patentCategoriesChart" height="300"></canvas>
+                    </div>
+                </div>
+        
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-medium">Filing Trends</h3>
+                    </div>
+                    <div class="p-4">
+                        <canvas id="patentTrendsChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+             <div class="mt-6 bg-white rounded-lg shadow">
+                <div class="p-4 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-medium">Recent Patent Activity</h3>
+                    <div class="flex space-x-2">
+                        <select id="patentTypeFilter" class="text-sm border rounded-md">
+                            <option value="all">All Types</option>
+                            <option value="utility">Utility</option>
+                            <option value="design">Design</option>
+                            <option value="plant">Plant</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <input 
+                        type="text" 
+                        id="patentSearch" 
+                        placeholder="Search patents by any field..." 
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                </div>
+                <div id="recentPatentsTable" class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patent Number</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filing Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="patentTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
+
+    </div> -->
+    <!-- <div id="technology-patents-content" class="space-y-6 dark:bg-gray-900">
+        <-- Summary Stats --
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Patents</h3>
+                <p id="totalPatents" class="mt-2 text-3xl font-semibold dark:text-white">1,648</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Patents</h3>
+                <p id="activePatents" class="mt-2 text-3xl font-semibold text-green-600 dark:text-green-400">1,025</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Patents</h3>
+                <p id="pendingPatents" class="mt-2 text-3xl font-semibold text-yellow-600 dark:text-yellow-400">71</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Recent Applications</h3>
+                <p id="recentApplications" class="mt-2 text-3xl font-semibold text-blue-600 dark:text-blue-400">-</p>
+            </div>
+        </div> -->
+    
+        <!-- Charts Section --
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Top Applicants</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="applicantsChart" height="300"></canvas>
+                </div>
+            </div>
+    
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Publications Over Time</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="publicationsChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    
+        !-- Recent Patents Table --
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">Recent Patents (Last Year)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Patent Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Filing Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Citations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentPatentsTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+    
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">All Patents</h3>
+                <div class="mt-4">
+                    <input type="text" id="patentSearch" placeholder="Search patents..." 
+                        class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Patent Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Filing Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allPatentsTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+    
+      
+        <div id="patentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-lg font-medium dark:text-white">Patent Details</h3>
+                    <button onclick="closePatentModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="patentModalContent" class="p-4">
+                 
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div id="technology-patents-content" class="space-y-6 ">
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Patents</h3>
+                <p id="totalPatents" class="mt-2 text-3xl font-semibold dark:text-white">-</p>
+            </div>
+            <!-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Patents</h3>
+                <p id="activePatents" class="mt-2 text-3xl font-semibold text-green-600 dark:text-green-400">-</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Patents</h3>
+                <p id="pendingPatents" class="mt-2 text-3xl font-semibold text-yellow-600 dark:text-yellow-400">-</p>
+            </div> -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Recent Applications</h3>
+                <p id="recentApplications" class="mt-2 text-3xl font-semibold text-blue-600 dark:text-blue-400">-</p>
+            </div>
+        </div>
+    
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Top Applicants</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="applicantsChart" height="300"></canvas>
+                </div>
+            </div>
+    
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Publications Over Time</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="publicationsChart" height="300"></canvas>
+                </div>
+            </div>
+    
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Legal Status Distribution</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="legalStatusChart" height="300"></canvas>
+                </div>
+            </div>
+    
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Jurisdiction Distribution</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="jurisdictionChart" height="300"></canvas>
+                </div>
+            </div>
+    
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium dark:text-white">Document Types</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="documentTypeChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Recent Patents Table -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">Recent Patents (Last Year)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Patent Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Filing Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Citations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentPatentsTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- All Patents Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium dark:text-white">All Patents</h3>
+                <div class="mt-4">
+                    <input type="text" id="patentSearch" placeholder="Search patents..." 
+                        class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Patent Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Filing Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allPatentsTable" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Patent Details Modal -->
+        <div id="patentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-lg font-medium dark:text-white">Patent Details</h3>
+                    <button onclick="closePatentModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="patentModalContent" class="p-4">
+                    <!-- Modal content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Digital Presence Content -->
+<!-- Digital Presence Content -->
+<div id="digital-presence-content" class="space-y-6">
+    <!-- Sub Navigation -->
+    <div class="bg-white rounded-lg p-4 shadow-sm">
+        <div class="flex space-x-4 border-b border-gray-200">
+            <button data-section="overview" class="px-4 py-2 border-b-2 border-blue-500 text-blue-600">Overview</button>
+            <button data-section="social" class="px-4 py-2 text-gray-600 hover:text-gray-800">Social Media</button>
+            <button data-section="website" class="px-4 py-2 text-gray-600 hover:text-gray-800">Website</button>
+            <button data-section="paid" class="px-4 py-2 text-gray-600 hover:text-gray-800">Paid Advertising</button>
+            <button data-section="content" class="px-4 py-2 text-gray-600 hover:text-gray-800">Content</button>
+        </div>
+    </div>
+
+    <!-- Overview Section -->
+    <div id="digital-overview-section">
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Total Social Followers</h4>
+                <p class="text-2xl font-bold mt-1" id="total-followers">Loading...</p>
+                <p class="text-sm text-green-600" id="followers-growth">+0%</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Website Traffic</h4>
+                <p class="text-2xl font-bold mt-1" id="total-traffic">Loading...</p>
+                <p class="text-sm text-green-600" id="traffic-growth">+0%</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Avg Engagement Rate</h4>
+                <p class="text-2xl font-bold mt-1" id="avg-engagement">Loading...</p>
+                <p class="text-sm text-green-600" id="engagement-trend">+0%</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Domain Authority</h4>
+                <p class="text-2xl font-bold mt-1" id="domain-authority">Loading...</p>
+                <p class="text-sm text-blue-600">/100</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <!-- Share of Voice -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Share of Voice</h3>
+                <canvas id="share-of-voice-chart" class="w-full h-64"></canvas>
+            </div>
+
+            <!-- Traffic Sources -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Traffic Sources</h3>
+                <canvas id="traffic-sources-chart" class="w-full h-64"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Media Section -->
+    <div id="digital-social-section" class="hidden">
+        <div class="mb-6">
+            <h3 class="text-xl font-semibold mb-4">Twitter Analytics</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Followers</h4>
+                    <p id="twitterFollowers" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="followerGrowth" class="text-sm text-green-600">+0%</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Engagement Rate</h4>
+                    <p id="engagementRate" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="engagementTrend" class="text-sm text-green-600">+0%</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Monthly Mentions</h4>
+                    <p id="monthlyMentions" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="mentionsTrend" class="text-sm text-green-600">+0%</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="text-sm font-medium text-gray-500">Sentiment Score</h4>
+                    <p id="sentimentScore" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="sentimentTrend" class="text-sm text-blue-600">Neutral</p>
+                </div>
+            </div>
+    
+            <div class="mt-6 bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Recent Tweets</h3>
+                </div>
+                <div id="recentTweets" class="divide-y divide-gray-200">
+                    <!-- Tweets will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Total Engagements</h4>
+                <p class="text-2xl font-bold mt-1" id="total-engagements">Loading...</p>
+                <p class="text-sm text-green-600">Last 30 days</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Avg. Sentiment Score</h4>
+                <p class="text-2xl font-bold mt-1" id="sentiment-score">Loading...</p>
+                <p class="text-sm text-green-600">+0.5 pts</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-sm text-gray-600">Video Views</h4>
+                <p class="text-2xl font-bold mt-1" id="video-views">Loading...</p>
+                <p class="text-sm text-green-600">Last 30 days</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Engagement Trends</h3>
+                <canvas id="social-engagement-chart" class="w-full h-64"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Sentiment Analysis</h3>
+                <canvas id="sentiment-chart" class="w-full h-64"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Website Section -->
+    <div id="digital-website-section" class="hidden">
+            <!-- SEO Section -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">SEO Performance</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Domain Authority</h4>
+                <p id="domainAuthority" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="authorityTrend" class="text-sm text-green-600">+0 pts</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Organic Keywords</h4>
+                <p id="organicKeywords" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="keywordsTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Backlinks</h4>
+                <p id="totalBacklinks" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="backlinksTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Top Keywords</h3>
+                </div>
+                <div class="p-4">
+                    <div id="topKeywordsTable" class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keyword</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Volume</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="keywordsTableBody">
+                                <!-- Keywords will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Visibility Trend</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="visibilityTrendChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Unique Visitors</h4>
+            <p class="text-2xl font-bold mt-1" id="unique-visitors">Loading...</p>
+            <p class="text-sm text-green-600" id="visitors-trend">+0%</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Page Views</h4>
+            <p class="text-2xl font-bold mt-1" id="page-views">Loading...</p>
+            <p class="text-sm text-green-600" id="views-trend">+0%</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Avg. Session Duration</h4>
+            <p class="text-2xl font-bold mt-1" id="session-duration">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Bounce Rate</h4>
+            <p class="text-2xl font-bold mt-1" id="bounce-rate">Loading...</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Traffic Trends</h3>
+            <canvas id="traffic-trends-chart" class="w-full h-64"></canvas>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">SEO Performance</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Domain Authority</span>
+                    <span class="font-semibold" id="seo-domain-authority">Loading...</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Total Backlinks</span>
+                    <span class="font-semibold" id="seo-backlinks">Loading...</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Page Load Time</span>
+                    <span class="font-semibold" id="seo-load-time">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Top Keywords</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                    </tr>
+                </thead>
+                <tbody id="keywords-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Dynamically populated -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Paid Advertising Section -->
+<div id="digital-paid-section" class="hidden">
+    <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Ad Spend</h4>
+            <p class="text-2xl font-bold mt-1" id="ad-spend">Loading...</p>
+            <p class="text-sm text-gray-600">This Month</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">CTR</h4>
+            <p class="text-2xl font-bold mt-1" id="ad-ctr">Loading...</p>
+            <p class="text-sm text-gray-600">Average</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">ROAS</h4>
+            <p class="text-2xl font-bold mt-1" id="ad-roas">Loading...</p>
+            <p class="text-sm text-gray-600">Return on Ad Spend</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Conversion Rate</h4>
+            <p class="text-2xl font-bold mt-1" id="ad-conversion">Loading...</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Ad Performance Trends</h3>
+            <canvas id="ad-performance-chart" class="w-full h-64"></canvas>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Campaign ROI</h3>
+            <canvas id="campaign-roi-chart" class="w-full h-64"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Content Marketing Section -->
+<div id="digital-content-section" class="hidden">
+    <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Blog Traffic</h4>
+            <p class="text-2xl font-bold mt-1" id="blog-traffic">Loading...</p>
+            <p class="text-sm text-green-600">Monthly</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Avg. Time on Page</h4>
+            <p class="text-2xl font-bold mt-1" id="content-time">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h4 class="text-sm text-gray-600">Social Shares</h4>
+            <p class="text-2xl font-bold mt-1" id="content-shares">Loading...</p>
+            <p class="text-sm text-green-600">Last 30 days</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Content Performance</h3>
+            <canvas id="content-performance-chart" class="w-full h-64"></canvas>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Top Performing Content</h3>
+            <div id="top-content-list" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+    <!-- Strategic Initiatives Content -->
+<div id="strategic-initiatives-content" class="hidden space-y-6">
+        <!-- Twitter Section -->
+    <!-- <div class="mb-6"> -->
+        <!-- <h3 class="text-xl font-semibold mb-4">Twitter Analytics</h3> -->
+        <!-- <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Followers</h4>
+                <p id="twitterFollowers" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="followerGrowth" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Engagement Rate</h4>
+                <p id="engagementRate" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="engagementTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Monthly Mentions</h4>
+                <p id="monthlyMentions" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="mentionsTrend" class="text-sm text-green-600">+0%</p> -->
+            <!-- </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Sentiment Score</h4>
+                <p id="sentimentScore" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="sentimentTrend" class="text-sm text-blue-600">Neutral</p>
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Recent Tweets</h3>
+            </div>
+            <div id="recentTweets" class="divide-y divide-gray-200">
+              
+            </div>
+        </div>
+    </div> -->
+
+    <!-- SEO Section -->
+    <!-- <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">SEO Performance</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Domain Authority</h4>
+                <p id="domainAuthority" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="authorityTrend" class="text-sm text-green-600">+0 pts</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Organic Keywords</h4>
+                <p id="organicKeywords" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="keywordsTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Backlinks</h4>
+                <p id="totalBacklinks" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="backlinksTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Top Keywords</h3>
+                </div>
+                <div class="p-4">
+                    <div id="topKeywordsTable" class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keyword</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Volume</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="keywordsTableBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Visibility Trend</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="visibilityTrendChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="bg-gray-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold mb-4">Current Initiatives</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">Major Projects</h4>
+                        <ul class="space-y-2">
+                            <li class="flex justify-between items-center">
+                                <span>Digital Transformation</span>
+                                <span class="text-yellow-600">In Progress</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span>Market Expansion</span>
+                                <span class="text-green-600">On Track</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="initiatives-progress-chart" class="w-full h-64"></canvas>
+            </div>
+        </div> -->
+    </div>
+
+    <!-- Financial Analysis Content -->
+<!-- Financial Analysis Content -->
+<div id="financial-analysis-content" class="hidden space-y-6">
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Company Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 id="company-name" class="text-3xl font-bold mb-2">Company Name</h1>
+                    <p id="company-period" class="text-gray-600 dark:text-gray-400">Fiscal Period</p>
+                </div>
+                <div class="text-right">
+                    <p id="last-updated" class="text-sm text-gray-600 dark:text-gray-400">Last Updated: </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Performance Indicators -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
+                    <span class="text-xs px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">TTM</span>
+                </div>
+                <p id="revenue-value" class="mt-2 text-3xl font-semibold">-</p>
+                <div id="revenue-growth" class="mt-2 text-sm"></div>
+            </div>
+            <!-- More KPI cards -->
+        </div>
+
+        <!-- Financial Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Revenue & Profitability</h2>
+                </div>
+                <div class="p-4">
+                    <canvas id="revenue-profit-chart" height="300"></canvas>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Segment Performance</h2>
+                </div>
+                <div class="p-4">
+                    <canvas id="segment-chart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Metrics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Financial Metrics -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Financial Metrics</h2>
+                </div>
+                <div class="p-4">
+                    <div id="financial-metrics" class="space-y-4">
+                        <!-- Metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operating Metrics -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Operating Metrics</h2>
+                </div>
+                <div class="p-4">
+                    <div id="operating-metrics" class="space-y-4">
+                        <!-- Metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Metrics -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Market Metrics</h2>
+                </div>
+                <div class="p-4">
+                    <div id="market-metrics" class="space-y-4">
+                        <!-- Metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regional Performance -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-medium">Regional Performance</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div id="regional-metrics">
+                        <!-- Regional metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Metrics Sections -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Balance Sheet Summary -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Balance Sheet Summary</h2>
+                </div>
+                <div class="p-4">
+                    <div id="balance-sheet-metrics" class="space-y-4">
+                        <!-- Balance sheet metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cash Flow Analysis -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-medium">Cash Flow Analysis</h2>
+                </div>
+                <div class="p-4">
+                    <div id="cash-flow-metrics" class="space-y-4">
+                        <!-- Cash flow metrics will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Revenue</h3>
+            <p id="revenueTTM" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="revenueGrowth" class="text-sm text-gray-600">Operating Income: -</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Market Cap</h3>
+            <p id="marketCap" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="stockPrice" class="text-sm text-gray-600">Stock Price: -</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Operating Margin</h3>
+            <p id="operatingMargin" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="grossProfit" class="text-sm text-gray-600">Gross Profit: -</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">R&D Expense</h3>
+            <p id="rdExpense" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="fcf" class="text-sm text-gray-600">Free Cash Flow: -</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Operating Metrics</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="operatingMetricsChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Financial Health</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="financialHealthChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Key Financial Metrics</h3>
+            </div>
+            <div class="p-4">
+                <table class="min-w-full">
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Operating Income</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="operatingIncomeMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Gross Profit</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="grossProfitMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Operating Margin</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="operatingMarginMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Shares Outstanding</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="sharesOutstandingMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">R&D Expense</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="rdExpenseMetric">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Balance Sheet Summary</h3>
+            </div>
+            <div class="p-4">
+                <table class="min-w-full">
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Current Assets</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="currentAssetsMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Current Liabilities</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="currentLiabilitiesMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Total Debt</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="totalDebtMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Cash & Equivalents</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="cashEquivalentsMetric">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">Free Cash Flow</td>
+                            <td class="px-6 py-4 text-sm font-medium text-right" id="freeCashFlowMetric">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> -->
+</div>
+               
+
+
+
+
+            </div>
+        </div>
+
+        <!-- Strategic Recommendations -->
+        <!-- <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+            <h2 class="text-xl font-semibold mb-4">Strategic Recommendations</h2>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-bullseye text-blue-600 mr-2"></i>
+                        <h3 class="font-medium">Market Entry Strategy</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Focus on emerging markets in Southeast Asia with customized product offerings.</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-chart-line text-green-600 mr-2"></i>
+                        <h3 class="font-medium">Growth Opportunities</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Invest in digital transformation initiatives to capture market share.</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-shield-alt text-yellow-600 mr-2"></i>
+                        <h3 class="font-medium">Defensive Strategy</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Strengthen patent portfolio in key technology areas.</p>
+                </div>
+            </div>
+        </div> -->
+
+
+    </div>
+
+    <script type="module"  src="competitor-analysis.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Dark mode toggle functionality
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or system preference
+    const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                    (!localStorage.getItem('darkMode') && 
+                     window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    // Set initial dark mode state
+    if (darkMode) {
+        html.classList.add('dark');
+    }
+
+    // Toggle dark mode
+    darkModeToggle.addEventListener('click', function() {
+        html.classList.toggle('dark');
+        localStorage.setItem('darkMode', html.classList.contains('dark'));
+    });
+
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab-button');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active state from all tabs
+            tabs.forEach(t => {
+                t.classList.remove('text-starkey-blue', 'dark:text-blue-400', 'border-starkey-blue');
+                t.classList.add('text-gray-500', 'dark:text-gray-400', 'border-transparent');
+            });
+
+            // Add active state to clicked tab
+            tab.classList.remove('text-gray-500', 'dark:text-gray-400', 'border-transparent');
+            tab.classList.add('text-starkey-blue', 'dark:text-blue-400', 'border-starkey-blue');
+        });
+    });
+});
+        // Enhanced digital presence data structure
+const digitalPresenceData = {
+    socialMedia: {
+        twitter: {
+            followers: {
+                historical: [
+                    { date: '2023-10', count: 118000 },
+                    { date: '2023-11', count: 122000 },
+                    { date: '2023-12', count: 125000 },
+                    { date: '2024-01', count: 128500 },
+                    { date: '2024-02', count: 132000 },
+                    { date: '2024-03', count: 135800 }
+                ],
+                growthRate: '+3.2%'
+            },
+            engagement: {
+                lastMonth: {
+                    tweets: 89,
+                    retweets: 1250,
+                    likes: 15800,
+                    replies: 780,
+                    mentions: 450
+                },
+                trends: [
+                    { date: '2024-03-01', likes: 520, retweets: 125, replies: 45 },
+                    { date: '2024-03-08', likes: 680, retweets: 98, replies: 52 },
+                    { date: '2024-03-15', likes: 890, retweets: 156, replies: 67 },
+                    { date: '2024-03-22', likes: 760, retweets: 143, replies: 58 }
+                ],
+                avgEngagementRate: 2.8
+            },
+            contentPerformance: {
+                postReach: 45000,
+                impressions: 89000,
+                videoViews: 25000
+            },
+            sentiment: {
+                positive: 65,
+                neutral: 25,
+                negative: 10,
+                trending: [
+                    { date: '2024-03-01', score: 7.8 },
+                    { date: '2024-03-08', score: 8.1 },
+                    { date: '2024-03-15', score: 7.9 },
+                    { date: '2024-03-22', score: 8.2 }
+                ]
+            }
+        },
+        linkedin: {
+            followers: {
+                historical: [
+                    { date: '2023-10', count: 820000 },
+                    { date: '2023-11', count: 835000 },
+                    { date: '2023-12', count: 850000 },
+                    { date: '2024-01', count: 875000 },
+                    { date: '2024-02', count: 892000 },
+                    { date: '2024-03', count: 915000 }
+                ],
+                growthRate: '+4.1%'
+            },
+            engagement: {
+                lastMonth: {
+                    posts: 45,
+                    reactions: 28500,
+                    comments: 1200,
+                    shares: 890
+                },
+                trends: [
+                    { date: '2024-03-01', reactions: 5800, comments: 280, shares: 190 },
+                    { date: '2024-03-08', reactions: 7200, comments: 320, shares: 225 },
+                    { date: '2024-03-15', reactions: 8500, comments: 420, shares: 280 },
+                    { date: '2024-03-22', reactions: 7000, comments: 380, shares: 195 }
+                ]
+            }
+        }
+    },
+    websiteAnalytics: {
+        traffic: {
+            monthly: {
+                total: 2500000,
+                unique: 1800000,
+                pageViews: 4200000,
+                bounceRate: 45.2,
+                avgSessionDuration: 185,
+                avgTimeOnPage: 142
+            },
+            sources: {
+                organic: 45.5,
+                direct: 25.2,
+                referral: 15.8,
+                social: 8.5,
+                paid: 5.0
+            },
+            trends: [
+                { date: '2024-03-01', visitors: 58000, pageViews: 125000 },
+                { date: '2024-03-08', visitors: 62000, pageViews: 132000 },
+                { date: '2024-03-15', visitors: 65000, pageViews: 138000 },
+                { date: '2024-03-22', visitors: 61000, pageViews: 130000 }
+            ]
+        },
+        seo: {
+            domainAuthority: 85,
+            totalBacklinks: 1250000,
+            referringDomains: 28500,
+            pageLoadTime: 2.3,
+            topKeywords: [
+                { keyword: "enterprise manufacturing", position: 2, volume: 12500 },
+                { keyword: "industrial solutions", position: 1, volume: 8200 },
+                { keyword: "healthcare products", position: 3, volume: 6800 },
+                { keyword: "manufacturing technology", position: 5, volume: 5400 },
+                { keyword: "industrial automation", position: 4, volume: 4900 }
+            ]
+        }
+    },
+    paidAdvertising: {
+        overview: {
+            adSpend: 450000,
+            impressions: 2800000,
+            clicks: 89000,
+            conversions: 3200,
+            revenue: 980000
+        },
+        metrics: {
+            ctr: 3.18,
+            cpc: 5.06,
+            conversionRate: 3.60,
+            roas: 2.18
+        },
+        trends: [
+            { date: '2024-03-01', spend: 112500, conversions: 780, revenue: 242000 },
+            { date: '2024-03-08', spend: 108000, conversions: 820, revenue: 256000 },
+            { date: '2024-03-15', spend: 115000, conversions: 850, revenue: 262000 },
+            { date: '2024-03-22', spend: 114500, conversions: 750, revenue: 220000 }
+        ]
+    },
+    contentMarketing: {
+        blog: {
+            traffic: {
+                monthly: 350000,
+                avgTimeOnPage: 245,
+                bounceRate: 52.8
+            },
+            posts: [
+                { date: '2024-03-01', views: 12500, shares: 450, comments: 85 },
+                { date: '2024-03-08', views: 15800, shares: 580, comments: 92 },
+                { date: '2024-03-15', views: 14200, shares: 520, comments: 78 },
+                { date: '2024-03-22', views: 13800, shares: 490, comments: 81 }
+            ],
+            topPerforming: [
+                {
+                    title: "Future of Manufacturing",
+                    views: 28500,
+                    shares: 1250,
+                    comments: 85,
+                    avgTimeOnPage: 312
+                },
+                {
+                    title: "Sustainability Report 2024",
+                    views: 25200,
+                    shares: 980,
+                    comments: 92,
+                    avgTimeOnPage: 285
+                },
+                {
+                    title: "Industry 4.0 Trends",
+                    views: 22800,
+                    shares: 850,
+                    comments: 76,
+                    avgTimeOnPage: 298
+                }
+            ]
+        }
+    },
+    competitorAnalysis: {
+        shareOfVoice: {
+            social: {
+                "3M": 35.2,
+                "Competitor A": 28.5,
+                "Competitor B": 22.8,
+                "Others": 13.5
+            },
+            news: {
+                "3M": 32.5,
+                "Competitor A": 30.2,
+                "Competitor B": 25.8,
+                "Others": 11.5
+            }
+        },
+        marketPenetration: {
+            "3M": 42.5,
+            "Competitor A": 28.8,
+            "Competitor B": 18.5,
+            "Others": 10.2
+        },
+        reviews: {
+            average: 4.2,
+            total: 15800,
+            sentiment: {
+                positive: 72,
+                neutral: 18,
+                negative: 10
+            },
+            trends: [
+                { date: '2024-03-01', rating: 4.3, reviews: 450 },
+                { date: '2024-03-08', rating: 4.1, reviews: 520 },
+                { date: '2024-03-15', rating: 4.2, reviews: 480 },
+                { date: '2024-03-22', rating: 4.3, reviews: 510 }
+            ]
+        }
+    }
+};
+
+class DigitalPresenceAnalytics {
+    constructor() {
+        this.charts = {};
+        this.data = digitalPresenceData
+        this.init();
+    }
+
+    async init() {
+        this.setupEventListeners();
+        this.initializeCharts();
+        this.updateMetrics();
+    }
+
+    setupEventListeners() {
+        const buttons = document.querySelectorAll('[data-section]');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => this.switchSection(button));
+        });
+    }
+
+    switchSection(selectedButton) {
+        // Update button states
+        document.querySelectorAll('[data-section]').forEach(button => {
+            button.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600');
+            button.classList.add('text-gray-600');
+        });
+        selectedButton.classList.add('border-b-2', 'border-blue-500', 'text-blue-600');
+        selectedButton.classList.remove('text-gray-600');
+
+        // Show selected section
+        const sections = ['overview', 'social', 'website', 'paid', 'content'];
+        sections.forEach(section => {
+            const element = document.getElementById(`digital-${section}-section`);
+            if (element) {
+                element.classList.toggle('hidden', section !== selectedButton.dataset.section);
+            }
+        });
+
+        // Refresh charts in visible section
+        this.refreshVisibleCharts();
+    }
+
+    initializeCharts() {
+        this.initShareOfVoiceChart();
+        this.initTrafficSourcesChart();
+        this.initSocialEngagementChart();
+        this.initSentimentChart();
+        this.initTrafficTrendsChart();
+        this.initAdPerformanceChart();
+    }
+
+    initShareOfVoiceChart() {
+        const ctx = document.getElementById('share-of-voice-chart');
+        if (!ctx) return;
+
+        this.charts.shareOfVoice = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Your Company', 'Competitor A', 'Competitor B', 'Others'],
+                datasets: [{
+                    data: [35, 25, 20, 20],
+                    backgroundColor: ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+
+    initTrafficSourcesChart() {
+        const ctx = document.getElementById('traffic-sources-chart');
+        if (!ctx) return;
+
+        this.charts.trafficSources = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(this.data.websiteAnalytics.traffic.sources).map(
+                    s => s.charAt(0).toUpperCase() + s.slice(1)
+                ),
+                datasets: [{
+                    data: Object.values(this.data.websiteAnalytics.traffic.sources),
+                    backgroundColor: ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+
+    initSocialEngagementChart() {
+        const ctx = document.getElementById('social-engagement-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+            datasets: [{
+                label: 'Engagement',
+                data: [12000, 15000, 18000, 16000],
+                borderColor: '#0088FE',
+                tension: 0.4
+            }]
+        };
+
+        this.charts.socialEngagement = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    initSentimentChart() {
+        const ctx = document.getElementById('sentiment-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Positive', 'Neutral', 'Negative'],
+            datasets: [{
+                data: [65, 25, 10],
+                backgroundColor: ['#4CAF50', '#FFA726', '#EF5350']
+            }]
+        };
+
+        this.charts.sentiment = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+
+    initTrafficTrendsChart() {
+        const ctx = document.getElementById('traffic-trends-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+            datasets: [{
+                label: 'Visitors',
+                data: [150000, 180000, 200000, 190000],
+                borderColor: '#2196F3',
+                tension: 0.4
+            }]
+        };
+
+        this.charts.trafficTrends = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    initAdPerformanceChart() {
+        const ctx = document.getElementById('ad-performance-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+            datasets: [{
+                label: 'Ad Performance',
+                data: [5000, 7000, 6500, 8000],
+                borderColor: '#4CAF50',
+                tension: 0.4
+            }]
+        };
+
+        this.charts.adPerformance = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    updateMetrics() {
+        this.updateBasicMetrics();
+        this.updateSocialMetrics();
+        this.updateWebMetrics();
+    }
+
+    updateBasicMetrics() {
+        const totalFollowers = this.data.socialMedia.twitter.followers.historical.slice(-1)[0].count +
+            this.data.socialMedia.linkedin.followers.historical.slice(-1)[0].count;
+        
+        const elements = {
+            'total-followers': this.formatNumber(totalFollowers),
+            'total-traffic': this.formatNumber(this.data.websiteAnalytics.traffic.monthly.unique),
+            'domain-authority': this.data.websiteAnalytics.seo.domainAuthority
+        };
+
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = value;
+        });
+    }
+
+    updateSocialMetrics() {
+        const elements = {
+            'twitter-followers': this.formatNumber(this.data.socialMedia.twitter.followers.historical.slice(-1)[0].count),
+            'linkedin-followers': this.formatNumber(this.data.socialMedia.linkedin.followers.historical.slice(-1)[0].count)
+        };
+
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = value;
+        });
+    }
+
+    updateWebMetrics() {
+        const elements = {
+            'unique-visitors': this.formatNumber(this.data.websiteAnalytics.traffic.monthly.unique),
+            'page-views': this.formatNumber(this.data.websiteAnalytics.traffic.monthly.pageViews),
+            'bounce-rate': this.data.websiteAnalytics.traffic.monthly.bounceRate + '%'
+        };
+
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = value;
+        });
+    }
+
+    refreshVisibleCharts() {
+        Object.values(this.charts).forEach(chart => {
+            if (chart && !chart.canvas.closest('.hidden')) {
+                chart.update();
+            }
+        });
+    }
+
+    formatNumber(number) {
+        if (number >= 1000000) {
+            return (number / 1000000).toFixed(1) + 'M';
+        } else if (number >= 1000) {
+            return (number / 1000).toFixed(1) + 'K';
+        }
+        return number.toString();
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('digital-presence-content')) {
+        const digitalPresence = new DigitalPresenceAnalytics();
+    }
+    
+});
+function loadCompanyMetrics(company) {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const companyId = urlParams.get('company');
+  
+//   const company = mockCompetitors.competitors.find(c => c.id === parseInt(companyId));
+  console.log(company)
+  if (company) {
+    document.getElementById('revenue-metric').textContent = company.revenue.toLocaleString();
+    document.getElementById('filings-metric').textContent = company.filings.toLocaleString();
+    document.getElementById('patents-metric').textContent = company.recentPatents.toLocaleString();
+    document.getElementById('market-metric').textContent = company.marketShare.toFixed(1);
+  }
+}
+
+        // Tab system implementation
+class TabSystem {
+    constructor() {
+        this.tabs = document.querySelectorAll('nav button');
+        this.contentAreas = {
+            'Market Analysis': document.getElementById('market-analysis-content'),
+            'FDA Product Portfolio': document.getElementById('product-portfolio-content'),
+            'Technology & Patents': document.getElementById('technology-patents-content'),
+            'Digital Presence': document.getElementById('digital-presence-content'),
+            'VA Affairs': document.getElementById('strategic-initiatives-content'),
+            'Financial Analysis': document.getElementById('financial-analysis-content')
+        };
+        this.activeContent = null;
+        this.init();
+    }
+
+    init() {
+        // Set up click handlers for each tab
+        this.tabs.forEach(tab => {
+            tab.addEventListener('click', () => this.switchTab(tab));
+        });
+
+        // Set initial active tab
+        this.switchTab(this.tabs[1]);
+    }
+
+    switchTab(selectedTab) {
+        console.log("working")
+        // Remove active state from all tabs
+        this.tabs.forEach(tab => {
+            tab.classList.remove('border-blue-500', 'text-blue-600', 'border-b-2');
+            tab.classList.add('text-gray-500', 'hover:text-gray-700', 'border-transparent');
+        });
+
+        // Set active state on selected tab
+        selectedTab.classList.remove('text-gray-500', 'hover:text-gray-700', 'border-transparent');
+        selectedTab.classList.add('border-blue-500', 'text-blue-600', 'border-b-2');
+
+        // Update content area
+        const tabName = selectedTab.textContent.trim();
+        this.showContent(tabName);
+    }
+
+    showContent(tabName) {
+        // Hide all content areas first
+        Object.values(this.contentAreas).forEach(content => {
+            if (content) {
+                content.classList.add('hidden');
+            }
+        });
+
+        // Show selected content area
+        const selectedContent = this.contentAreas[tabName];
+        if (selectedContent) {
+            selectedContent.classList.remove('hidden');
+            this.activeContent = selectedContent;
+            
+            // Refresh charts if they exist in this tab
+            this.refreshCharts(selectedContent);
+        }
+    }
+
+    refreshCharts(contentArea) {
+        // Find all charts in the content area and refresh them
+        const charts = contentArea.querySelectorAll('canvas');
+        charts.forEach(chart => {
+            if (chart.chart) {
+                chart.chart.update();
+            }
+        });
+    }
+}
+// Mock data for company overview
+const mockCompetitors = {
+    competitors: [
+        {
+            id: 1,
+            name: 'Sonova',
+            industry: 'Healthcare',
+            keyMetrics: {
+                revenue: 1833.2,
+                marketShare: 50.13,
+                recentPatents: 46,
+                filings: 11185
+            },
+            marketPosition: {
+                rank: 1,
+                type: 'Market Leader',
+                strength: 'High',
+                trend: 'up'
+            },
+            recentActivities: [
+                {
+                    type: 'patent',
+                    title: 'AI-Powered Hearing Aid Algorithm',
+                    date: 'January 15, 2025'
+                },
+                {
+                    type: 'product',
+                    title: 'Launch of Phonak Lumity Pro',
+                    date: 'January 8, 2025'
+                },
+                {
+                    type: 'acquisition',
+                    title: 'Acquisition of AudioTech Solutions',
+                    date: 'December 20, 2024'
+                }
+            ],
+            quickMetrics: {
+                roi: 28.4,
+                nps: 72,
+                marketGrowth: 15.2,
+                innovationScore: 8.5
+            }
+        },
+        {
+            id: 2,
+            name: 'GN ReSound',
+            industry: 'Healthcare',
+            keyMetrics: {
+                revenue: 4164.0,
+                marketShare: 10.07,
+                recentPatents: 8,
+                filings: 22963
+            },
+            marketPosition: {
+                rank: 3,
+                type: 'Challenger',
+                strength: 'High',
+                trend: 'up'
+            },
+            recentActivities: [
+                {
+                    type: 'product',
+                    title: 'ReSound OMNIA Launch',
+                    date: 'January 18, 2025'
+                },
+                {
+                    type: 'partnership',
+                    title: 'Google Health Partnership',
+                    date: 'January 5, 2025'
+                }
+            ],
+            quickMetrics: {
+                roi: 25.6,
+                nps: 68,
+                marketGrowth: 12.4,
+                innovationScore: 8.2
+            }
+        },
+        {
+            id: 3,
+            name: 'WS Audiology',
+            industry: 'Healthcare',
+            keyMetrics: {
+                revenue: 2637.0,
+                marketShare: 6.9,
+                recentPatents: 329,
+                filings: 26565
+            },
+            marketPosition: {
+                rank: 4,
+                type: 'Challenger',
+                strength: 'High',
+                trend: 'stable'
+            },
+            recentActivities: [
+                {
+                    type: 'product',
+                    title: 'Signia Silk X Launch',
+                    date: 'January 20, 2025'
+                },
+                {
+                    type: 'expansion',
+                    title: 'New R&D Center in Singapore',
+                    date: 'January 10, 2025'
+                },
+                {
+                    type: 'partnership',
+                    title: 'Microsoft AI Partnership',
+                    date: 'December 15, 2024'
+                }
+            ],
+            quickMetrics: {
+                roi: 22.8,
+                nps: 70,
+                marketGrowth: 11.6,
+                innovationScore: 7.8
+            }
+        },
+        {
+            id: 4,
+            name: 'Demant',
+            industry: 'Healthcare',
+            keyMetrics: {
+                revenue: 16488.0, // DKK million, as of Q3 2024
+                marketShare: 8.5, // Estimated global market share percentage
+                recentPatents: 12, // Number of recent patents filed
+                filings: 23000 // Approximate number of regulatory filings
+            },
+            marketPosition: {
+                rank: 2,
+                type: 'Challenger',
+                strength: 'High',
+                trend: 'up'
+            },
+            recentActivities: [
+                {
+                    type: 'product',
+                    title: 'Oticon Intent Launch',
+                    date: 'February 2025'
+                },
+                {
+                    type: 'partnership',
+                    title: 'EPOS and Lenovo Strategic Partnership',
+                    date: 'November 7, 2024'
+                },
+                {
+                    type: 'sustainability',
+                    title: 'Joined Net-Zero Future Network',
+                    date: 'December 4, 2024'
+                }
+            ],
+            quickMetrics: {
+                roi: 22.5, // Return on Investment percentage
+                nps: 70, // Net Promoter Score
+                marketGrowth: 10.0, // Market growth percentage
+                innovationScore: 8.5 // Innovation score out of 10
+            }
+        }
+        
+    ]
+};
+
+// function getCD() {
+//     const companyId = new URLSearchParams(window.location.search).get('id');
+//     const id = parseInt(companyId);
+    
+//     if (!id) {
+//         throw new Error('Invalid or missing company ID');
+//     }
+
+    // const companyMap = {
+    //     1: { name: '3M', cik: '0000066740', industry:'Global manufacturing and technology company' },
+    //     2: { name: 'Medtronic Inc', cik: '0000064670', industry: 'Healthcare' }
+    // };
+    const getCompanyData = (id) => {
+    const companyMap = {
+        1: { // Sonova
+            keyMetrics: {
+                revenue: 1833.2,
+                marketShare: 50.13,
+                recentPatents: 46,
+                filings: 11185
+            },
+            recentActivity: [
+            {
+                    type: 'patent',
+                    title: 'Sphere Infinio Hearing Aid',
+                    description: 'Introduced the first global hearing aid utilizing real-time AI to enhance speech clarity amidst background noise.',
+                    date: '2024-08-06',
+                    icon: 'lightbulb',
+                    color: 'blue'
+                },
+                {
+                    type: 'fda',
+                    title: 'Resumed Supply to Costco',
+                    description: 'Resumed supplying Costco with the Sennheiser Sonite R, a product specifically designed for the retailer.',
+                    date: '2024-10-28',
+                    icon: 'handshake',
+                    color: 'green'
+                },
+                {
+                    type: 'earnings',
+                    title: 'Half-Year Profit Report',
+                    description: 'Reported a half-year core profit below market expectations due to high costs from launching a new AI-boosted hearing device.',
+                    date: '2024-11-19',
+                    icon: 'file-medical',
+                    color: 'red'
+                }
+            ],
+            news: [
+
+                {
+                    title: 'Phonak Expands Infinio Portfolio with Two New Custom Hearing Aids',
+                    source: 'NewsBreak',
+                    date: '2025-01-16',
+                    sentiment: 'positive'
+                },
+                {
+                    title: 'Sonova to present at the J.P. Morgan 2025 Healthcare Conference',
+                    source: 'Eqs News',
+                    date: '2025-01-13',
+                    sentiment: 'positive'
+                },
+                {
+                    title: 'Sonova announces changes to its Board of Directors',
+                    source: 'Financial Times',
+                    date: '2025-01-09',
+                    sentiment: 'positive'
+                }
+            ],
+            marketSentiment: {
+                dates: ['Jan', 'Feb', 'Mar', 'Apr'],
+                values: [85, 88, 92, 90],
+                mentions: [800, 950, 1100, 1000]
+            }
+        },
+        2: { // GN Store Nord
+            keyMetrics: {
+                revenue: 4164.0,
+                marketShare: 10.07,
+                recentPatents: 8,
+                filings: 22963
+            },
+            recentActivity: [
+                {
+                    type: 'patent',
+                    title: 'A Hearing Aid With an Antenna',
+                    description: 'Patent filed for hearing aid with Antenna',
+                    date: '2024-10-16',
+                    icon: 'lightbulb',
+                    color: 'blue'
+                },
+                {
+                    type: 'fda',
+                    title: 'UDI Beltone',
+                    description: 'A battery-powered acoustic device intended to compensate for impaired hearing by transmitting amplified sound waves to the eardrum through air.',
+                    date: '09/06/2024',
+                    icon: 'file-medical',
+                    color: 'green'
+                },
+                {
+                    type: 'earnings',
+                    title: 'Q3 2024 Results',
+                    description: 'Organic Growth: -4.0%',
+                    date: '2024-07-24',
+                    icon: 'chart-line',
+                    color: 'purple'
+                }
+            ],
+            news: [
+                {
+                    title: 'GN Audio Launches New Conference Solution',
+                    source: 'Reuters',
+                    date: '2024-01-02',
+                    sentiment: 'positive'
+                },
+                {
+                    title: 'GN Store Nord Updates Financial Outlook',
+                    source: 'Bloomberg',
+                    date: '2024-01-08',
+                    sentiment: 'neutral'
+                },
+                {
+                    title: 'GN Hearing Expands in Asian Markets',
+                    source: 'Financial Times',
+                    date: '2024-01-05',
+                    sentiment: 'positive'
+                }
+            ],
+            marketSentiment: {
+                dates: ['Jan', 'Feb', 'Mar', 'Apr'],
+                values: [72, 75, 78, 80],
+                mentions: [600, 750, 800, 850]
+            }
+        },
+        3: { // WS Audiology
+            keyMetrics: {
+                revenue: 2637.0,
+                marketShare: 6.9,
+                recentPatents: 329,
+                filings: 26565
+            },
+            recentActivity: [
+            {
+                    type: 'fda',
+                    title: 'New CEO Appointment',
+                    description: 'Jan Makela took over as CEO, succeeding Eric Bernard.',
+                    date: '2024-07-01',
+                    icon: 'user-tie',
+                    color: 'blue'
+                },
+                {
+                    type: 'earnings',
+                    title: 'Annual Financial Report',
+                    description: 'Reported a 10% organic revenue growth and a 13% improvement in EBITDA for the financial year 2023/24.',
+                    date: '2024-11-27',
+                    icon: 'chart-line',
+                    color: 'green'
+                },
+                {
+                    type: 'patent',
+                    title: 'Signia IX Hearing Aid',
+                    description: 'Launched Signia IX, delivering more than twice the speech enhancement benefit in noisy group conversations than closest competitors.',
+                    date: '2024-10-14',
+                    icon: 'lightbulb',
+                    color: 'blue'
+                }
+            ],
+            news: [
+                {
+                    title: 'WS Audiology Strengthens Direct-to-Consumer Channel',
+                    source: 'Reuters',
+                    date: '2024-01-02',
+                    sentiment: 'positive'
+                },
+                {
+                    title: 'WS Audiology Partners with AI Research Institute',
+                    source: 'Bloomberg',
+                    date: '2024-01-08',
+                    sentiment: 'positive'
+                },
+                {
+                    title: 'WS Audiology Consolidates European Operations',
+                    source: 'Financial Times',
+                    date: '2024-01-05',
+                    sentiment: 'neutral'
+                }
+            ],
+            marketSentiment: {
+                dates: ['Jan', 'Feb', 'Mar', 'Apr'],
+                values: [70, 75, 73, 78],
+                mentions: [500, 600, 550, 700]
+            }
+        },
+       4: {
+    name: 'Demant',
+    industry: 'Healthcare',
+    keyMetrics: {
+                revenue: 11087, // DKK million, as of Q3 2024
+                marketShare: 18.34, // Estimated global market share percentage
+                recentPatents: 107, // Number of recent patents filed
+                filings: 26565 // Approximate number of regulatory filings
+            },
+    recentActivity: [
+        {
+            type: 'fda',
+            title: 'Oticon Intent™ Launch',
+            description: 'Introduced the world’s first hearing aid with 4D Sensor technology to understand each user\'s listening intentions.',
+            date: '2024-02-08',
+            icon: 'lightbulb',
+            color: 'blue'
+        },
+        {
+            type: 'patent',
+            title: 'EPOS and Lenovo Strategic Partnership',
+            description: 'Announced a collaboration to deliver professional audio solutions.',
+            date: '2024-11-07',
+            icon: 'handshake',
+            color: 'green'
+        },
+        {
+            type: 'earnings',
+            title: 'Joined Net-Zero Future Network',
+            description: 'Committed to reducing carbon footprint by joining a network calling upon world leaders for a net-zero future.',
+            date: '2024-12-04',
+            icon: 'leaf',
+            color: 'green'
+        }
+    ],
+    news: [
+        {
+            title: 'Demant Acquires Dansk HøreCenter',
+            source: 'Demant Official Website',
+            date: '2024-10-08',
+            sentiment: 'positive'
+        },
+        {
+            title: 'Restructuring Plan for EPOS Announced',
+            source: 'Demant Official Website',
+            date: '2024-11-07',
+            sentiment: 'neutral'
+        },
+        {
+            title: 'Demant’s Climate Targets Approved',
+            source: 'Demant Official Website',
+            date: '2024-07-03',
+            sentiment: 'positive'
+        }
+    ],
+    marketSentiment: {
+        dates: ['Jan', 'Feb', 'Mar', 'Apr'],
+        values: [70, 72, 75, 78],
+        mentions: [500, 600, 700, 800]
+    }
+}
+
+    };
+
+    const company = companyMap[id];
+    
+    if (!company) {
+        throw new Error(`No company found with ID: ${id}`);
+    }
+
+    return company;
+};
+
+async function initializeCompanyOverview() {
+    try {
+    const companyId = new URLSearchParams(window.location.search).get('id');
+    const id = parseInt(companyId);
+    
+    if (!id) {
+        throw new Error('Invalid or missing company ID');
+    }
+        const companyData = getCompanyData(id);
+        loadCompanyMetrics(companyData.keyMetrics)
+        updateNewsSection(companyData.news);
+        updateActivitySection(companyData)
+        initializeSentimentChart(companyData);
+    } catch (error) {
+        console.error('Error initializing company overview:', error);
+    }
+}
+
+// function initializeCompanyOverview(id) {
+//     try {
+//         const companyData = getCompanyData(id);
+//         updateNewsSection(companyData);
+//         initializeSentimentChart(companyData);
+//     } catch (error) {
+//         console.error('Error initializing company overview:', error);
+//     }
+// }
+
+function updateActivitySection(data) {
+    const activityContainer = document.getElementById('activityContainer');
+    if (!activityContainer) return;
+
+    const getIconClass = (type) => ({
+        patent: 'fa-lightbulb',
+        fda: 'fa-file-medical',
+        earnings: 'fa-chart-line'
+    })[type] || 'fa-lightbulb';
+
+    const getColorClass = (type) => ({
+        patent: 'bg-blue-500 dark:bg-blue-600',
+        fda: 'bg-green-500 dark:bg-green-600',
+        earnings: 'bg-purple-500 dark:bg-purple-600'
+    })[type] || 'bg-gray-500';
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+    const activities = Array.isArray(data) ? data : data.recentActivity || [];
+    
+    const activityHtml = activities.map((activity, index) => `
+        <div class="flex">
+            <div class="flex flex-col items-center">
+                <div class="w-8 h-8 ${getColorClass(activity.type)} rounded-full flex items-center justify-center">
+                    <i class="fas ${getIconClass(activity.type)} text-white"></i>
+                </div>
+                ${index !== activities.length - 1 ? 
+                    '<div class="flex-1 w-px bg-gray-300 dark:bg-gray-600 h-full"></div>' : 
+                    ''}
+            </div>
+            <div class="flex-1 ml-4 mb-6">
+                <div class="font-medium text-gray-900 dark:text-white">${activity.title}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">${activity.description}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">${formatDate(activity.date)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    activityContainer.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+            <div class="p-4">
+                <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Recent Company Activity</h3>
+                <div class="space-y-4">
+                    ${activityHtml}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateNewsSection(data) {
+    const newsContainer = document.getElementById('newsContainer');
+    if (!newsContainer) return;
+
+    const newsItems = Array.isArray(data) ? data : data.news || [];
+    console.log(newsItems)
+    
+    const getSentimentColor = (sentiment) => {
+        const colors = {
+            positive: 'border-green-500',
+            negative: 'border-red-500',
+            neutral: 'border-gray-500'
+        };
+        return colors[sentiment] || colors.neutral;
+    };
+
+    const newsHtml = newsItems.map(news => `
+        <div class="border-l-4 ${getSentimentColor(news.sentiment)} pl-4 transition-colors duration-200">
+            <div class="font-medium text-gray-900 dark:text-white">${news.title}</div>
+            <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <span>${news.source}</span>
+                <span>${news.date}</span>
+            </div>
+        </div>
+    `).join('');
+
+    newsContainer.innerHTML = newsHtml;
+}
+
+
+
+
+
+function getSentimentColor(sentiment) {
+    const colors = {
+        positive: 'border-green-500 dark:border-green-400',
+        neutral: 'border-gray-500 dark:border-gray-400',
+        negative: 'border-red-500 dark:border-red-400'
+    };
+    return colors[sentiment] || colors.neutral;
+}
+
+
+function initializeSentimentChart(data) {
+    const ctx = document.getElementById('sentiment-trend-chart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.marketSentiment.dates,
+            datasets: [
+                {
+                    label: 'Sentiment Score',
+                    data: data.marketSentiment.values,
+                    borderColor: '#4299E1',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 0,
+                    max: 100
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Score: ${context.raw}/100`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeCompanyOverview);
+// Initialize the tab system when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const tabSystem = new TabSystem();
+});
+    </script>
+</body>
+</html>

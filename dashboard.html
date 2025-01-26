@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="hidden md:block">
+                        <select id="companySelector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                            <option value="">Select Company</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="refreshData" class="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        <i class="fas fa-sync-alt mr-2"></i>
+                        Refresh Data
+                    </button>
+                    <div class="text-sm text-gray-500">
+                        Last updated: <span id="lastUpdated">Never</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Company Overview -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 id="companyName" class="text-3xl font-bold text-gray-900">Select a Company</h1>
+                    <p id="companyIndustry" class="text-gray-600 mt-1">Industry overview and analysis</p>
+                </div>
+                <div class="flex space-x-3">
+                    <span id="companyStatus" class="px-3 py-1 rounded-full text-sm font-semibold"></span>
+                </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-gray-500">Market Cap</h3>
+                    <p id="marketCap" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="marketCapChange" class="text-sm"></p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-gray-500">Market Cap</h3>
+                    <p id="marketCap" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="marketCapChange" class="text-sm"></p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-gray-500">Market Cap</h3>
+                    <p id="marketCap" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="marketCapChange" class="text-sm"></p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-gray-500">Market Cap</h3>
+                    <p id="marketCap" class="mt-2 text-3xl font-semibold">-</p>
+                    <p id="marketCapChange" class="text-sm"></p>
+                </div>
+                <!-- Add more metric cards -->
+            </div>
+        </div>
+
+        <!-- Analysis Tabs -->
+        <div class="bg-white rounded-lg shadow-lg">
+            <nav class="flex px-6 pt-4">
+                <button class="tab-button px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700" data-tab="overview">Overview</button>
+                <button class="tab-button px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700" data-tab="patents">Patents</button>
+                <button class="tab-button px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700" data-tab="fda">FDA Filings</button>
+                <button class="tab-button px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700" data-tab="social">Social & Digital</button>
+                <button class="tab-button px-4 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700" data-tab="financials">Financial Analysis</button>
+            </nav>
+
+            <div class="p-6">
+                <!-- Overview Tab -->
+                <div id="overview" class="tab-content">
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- Recent News -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-4 border-b">
+                                <h3 class="text-lg font-medium">Recent News</h3>
+                            </div>
+                            <div id="newsContainer" class="p-4 space-y-4">
+                                <!-- News items -->
+                            </div>
+                        </div>
+
+                        <!-- Market Trends -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-4 border-b">
+                                <h3 class="text-lg font-medium">Market Trends</h3>
+                            </div>
+                            <div class="p-4">
+                                <canvas id="marketTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- Patents Tab -->
+<div id="patents" class="tab-content hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Patents</h3>
+            <p id="totalPatents" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Last 12 months</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Pending Applications</h3>
+            <p id="pendingPatents" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Currently in review</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Expiring Soon</h3>
+            <p id="expiringPatents" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-yellow-600">Next 12 months</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Patent Categories</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="patentCategoriesChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Filing Trends</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="patentTrendsChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 bg-white rounded-lg shadow">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">Recent Patent Activity</h3>
+            <div class="flex space-x-2">
+                <select id="patentTypeFilter" class="text-sm border rounded-md">
+                    <option value="all">All Types</option>
+                    <option value="utility">Utility</option>
+                    <option value="design">Design</option>
+                    <option value="plant">Plant</option>
+                </select>
+            </div>
+        </div>
+        <div id="recentPatentsTable" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patent Number</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filing Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200" id="patentTableBody">
+                    <!-- Patents will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- FDA Filings Tab -->
+<div id="fda" class="tab-content hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Active Applications</h3>
+            <p id="activeApplications" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-blue-600">Currently in review</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Approved Products</h3>
+            <p id="approvedProducts" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-green-600">Total approved</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Recent Submissions</h3>
+            <p id="recentSubmissions" class="mt-2 text-3xl font-semibold">-</p>
+            <p class="text-sm text-gray-600">Last 30 days</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Submission Types</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="submissionTypesChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Approval Timeline</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="approvalTimelineChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 bg-white rounded-lg shadow">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium">Recent FDA Activity</h3>
+            <div class="flex space-x-2">
+                <select id="fdaStatusFilter" class="text-sm border rounded-md">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="complete">Complete Response</option>
+                </select>
+            </div>
+        </div>
+        <div id="fdaFilingsTable" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Application #</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200" id="fdaTableBody">
+                    <!-- FDA filings will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Digital Presence Tab -->
+<div id="digital" class="tab-content hidden">
+    <!-- Twitter Section -->
+    <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">Twitter Analytics</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Followers</h4>
+                <p id="twitterFollowers" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="followerGrowth" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Engagement Rate</h4>
+                <p id="engagementRate" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="engagementTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Monthly Mentions</h4>
+                <p id="monthlyMentions" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="mentionsTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Sentiment Score</h4>
+                <p id="sentimentScore" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="sentimentTrend" class="text-sm text-blue-600">Neutral</p>
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-lg shadow">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-medium">Recent Tweets</h3>
+            </div>
+            <div id="recentTweets" class="divide-y divide-gray-200">
+                <!-- Tweets will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SEO Section -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">SEO Performance</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Domain Authority</h4>
+                <p id="domainAuthority" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="authorityTrend" class="text-sm text-green-600">+0 pts</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Organic Keywords</h4>
+                <p id="organicKeywords" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="keywordsTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h4 class="text-sm font-medium text-gray-500">Backlinks</h4>
+                <p id="totalBacklinks" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="backlinksTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Top Keywords</h3>
+                </div>
+                <div class="p-4">
+                    <div id="topKeywordsTable" class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keyword</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Volume</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="keywordsTableBody">
+                                <!-- Keywords will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Visibility Trend</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="visibilityTrendChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Financial Analysis Tab -->
+<div id="financials" class="tab-content hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Revenue (TTM)</h3>
+            <p id="revenueTTM" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="revenueGrowth" class="text-sm text-green-600">+0% YoY</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Operating Margin</h3>
+            <p id="operatingMargin" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="marginTrend" class="text-sm text-green-600">+0 bps</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Free Cash Flow</h3>
+            <p id="freeCashFlow" class="mt-2 text-3xl font-semibold">-</p>
+            <p id="fcfTrend" class="text-sm text-green-600">+0%</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="text-sm font-medium text-gray-500">Return on Capital</h3>
+                <p id="returnOnCapital" class="mt-2 text-3xl font-semibold">-</p>
+                <p id="rocTrend" class="text-sm text-green-600">+0%</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Revenue & Growth</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="revenueChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Margin Analysis</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="marginChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEC Filings -->
+        <div class="mt-6 bg-white rounded-lg shadow">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium">Recent SEC Filings</h3>
+                <div class="flex space-x-2">
+                    <select id="filingTypeFilter" class="text-sm border rounded-md">
+                        <option value="all">All Filings</option>
+                        <option value="10-K">10-K</option>
+                        <option value="10-Q">10-Q</option>
+                        <option value="8-K">8-K</option>
+                    </select>
+                </div>
+            </div>
+            <div id="secFilingsTable" class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Form</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filed Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Period</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="secTableBody">
+                        <!-- SEC filings will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Financial Metrics -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Key Financial Metrics</h3>
+                </div>
+                <div class="p-4">
+                    <table class="min-w-full">
+                        <tbody class="divide-y divide-gray-200" id="metricsTableBody">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Revenue Growth (YoY)</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="revenueGrowthMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Gross Margin</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="grossMarginMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Operating Margin</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="operatingMarginMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Net Margin</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="netMarginMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">EPS Growth</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="epsGrowthMetric">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-medium">Balance Sheet Summary</h3>
+                </div>
+                <div class="p-4">
+                    <table class="min-w-full">
+                        <tbody class="divide-y divide-gray-200" id="balanceSheetTableBody">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Cash & Equivalents</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="cashMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Total Debt</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="debtMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Total Assets</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="assetsMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Total Liabilities</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="liabilitiesMetric">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">Shareholders Equity</td>
+                                <td class="px-6 py-4 text-sm font-medium text-right" id="equityMetric">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <p class="mt-4 text-gray-600">Loading data...</p>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

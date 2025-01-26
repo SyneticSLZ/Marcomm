@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Analysis - Enterprise Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="h-8 w-auto" src="/api/placeholder/32/32" alt="Logo">
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="./index.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                            <a href="./competitors.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Competitors</a>
+                            <a href="./startups.html" class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm font-medium">Startups</a>
+                            <a href="./intelligence.html" class="text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Intelligence</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        <i class="fas fa-file-export mr-2"></i>Export Analysis
+                    </button>
+                    <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                        <i class="fas fa-star mr-2"></i>Track Startup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Startup Overview -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-3xl font-bold text-gray-900 startup-name">TechVision AI</h1>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm startup-stage">Series B</span>
+                    </div>
+                    <p class="mt-2 text-gray-600">AI/ML Solutions for Enterprise</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-globe mr-1"></i>Website
+                    </a>
+                    <a href="#" class="text-blue-600 hover:text-blue-800">
+                        <i class="fab fa-linkedin mr-1"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-6 gap-6 mt-6">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Total Funding</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="totalFunding">$45M</p>
+                    <p class="text-sm text-green-600">Latest: Series B $25M</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Team Size</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="teamSize">120</p>
+                    <p class="text-sm text-green-600">+45 this year</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Growth Rate</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="growthRate">156.3%</p>
+                    <p class="text-sm text-green-600">YoY</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Customers</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="customers">250</p>
+                    <p class="text-sm text-green-600">+85 this quarter</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Tech Score</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="techScore">85</p>
+                    <p class="text-sm text-green-600">8 Patents</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">Market Score</p>
+                    <p class="text-2xl font-bold text-gray-900" data-stat="marketScore">92</p>
+                    <p class="text-sm text-green-600">TAM: $5B</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Tabs -->
+        <div class="bg-white rounded-lg shadow-lg">
+            <!-- Tab Navigation -->
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                    <button data-tab="overview" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        Overview
+                    </button>
+                    <button data-tab="performance" class="text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b border-transparent font-medium text-sm">
+                        Performance
+                    </button>
+                    <button data-tab="technology" class="text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b border-transparent font-medium text-sm">
+                        Technology
+                    </button>
+                    <button data-tab="market" class="text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b border-transparent font-medium text-sm">
+                        Market Analysis
+                    </button>
+                    <button data-tab="team" class="text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b border-transparent font-medium text-sm">
+                        Team
+                    </button>
+                    <button data-tab="investment" class="text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b border-transparent font-medium text-sm">
+                        Investment History
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Content Areas -->
+            <div class="p-6">
+                <div data-tab-content="overview"></div>
+                <div data-tab-content="performance" class="hidden"></div>
+                <div data-tab-content="technology" class="hidden"></div>
+                <div data-tab-content="market" class="hidden"></div>
+                <div data-tab-content="team" class="hidden"></div>
+                <div data-tab-content="investment" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <p class="mt-4 text-gray-600">Loading data...</p>
+        </div>
+    </div>
+
+    <script src="startup-analysis.js"></script>
+</body>
+</html>
