@@ -175,95 +175,96 @@ groupPatentsByTitle(patents) {
 
     renderSinglePatentRow(patent) {
         return `
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <a href="${patent.URL}"
-                       target="_blank"
-                       class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline">
-                        ${patent['Display Key']}
-                    </a>
-                </td>
-                <td class="px-6 py-4 dark:text-white" onclick="showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})">
-                    ${patent.Title}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">
-                    ${patent['Application Date']}
-                </td>
-                <td class="px-6 py-4">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${patent['Legal Status'] === 'Active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 
-                      patent['Legal Status'] === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' : 
-                      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
-                        ${patent['Legal Status']}
-                    </span>
-                </td>
-                <td class="px-6 py-4 dark:text-white">
-                    ${patent['Cites Patent Count'] + patent['Cited by Patent Count']}
-                </td>
-            </tr>
-        `;
-    }
+        <tr class="hover:bg-marcomm-orange/5 dark:hover:bg-marcomm-orange/10 cursor-pointer transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+                <a href="${patent.URL}"
+                   target="_blank"
+                   class="text-marcomm-orange hover:text-marcomm-orange-light dark:text-marcomm-orange dark:hover:text-marcomm-orange-light transition-colors">
+                    ${patent['Display Key']}
+                </a>
+            </td>
+            <td class="px-6 py-4 font-light text-marcomm-dark dark:text-white" onclick="showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})">
+                ${patent.Title}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap font-light text-marcomm-dark dark:text-white">
+                ${patent['Application Date']}
+            </td>
+            <td class="px-6 py-4">
+                <span class="px-2 inline-flex text-xs leading-5 font-light rounded-full 
+                ${patent['Legal Status'] === 'Active' ? 'bg-marcomm-orange/10 text-marcomm-orange dark:bg-marcomm-orange/20 dark:text-marcomm-orange-light' : 
+                  patent['Legal Status'] === 'Pending' ? 'bg-marcomm-orange/10 text-marcomm-orange dark:bg-marcomm-orange/20 dark:text-marcomm-orange-light' : 
+                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
+                    ${patent['Legal Status']}
+                </span>
+            </td>
+            <td class="px-6 py-4 font-light text-marcomm-dark dark:text-white">
+                ${patent['Cites Patent Count'] + patent['Cited by Patent Count']}
+            </td>
+        </tr>
+    `;
+}
 
     renderPatentGroup(group, groupIndex) {
         const mainPatent = group.patents[0];
         return `
-            <tr class="group-header hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td colspan="5" class="px-6 py-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <button onclick="toggleGroup('group-${groupIndex}')" 
-                                    class="text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-gray-200">
-                                <svg class="w-5 h-5 transform transition-transform duration-200" 
-                                     fill="none" 
-                                     stroke="currentColor" 
-                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" 
-                                          stroke-linejoin="round" 
-                                          stroke-width="2" 
-                                          d="M19 9l-7 7-7-7"/>
-                                </svg>
-                            </button>
-                            <div>
-                                <div class="font-medium dark:text-white">${mainPatent.Title}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-300">
-                                    ${group.patents.length} variations
-                                </div>
+        <tr class="group-header hover:bg-marcomm-orange/5 dark:hover:bg-marcomm-orange/10">
+            <td colspan="5" class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="toggleGroup('group-${groupIndex}')" 
+                                class="text-marcomm-orange dark:text-marcomm-orange-light hover:text-marcomm-orange-dark transition-colors">
+                            <svg class="w-5 h-5 transform transition-transform duration-200" 
+                                 fill="none" 
+                                 stroke="currentColor" 
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round" 
+                                      stroke-linejoin="round" 
+                                      stroke-width="2" 
+                                      d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div>
+                            <div class="font-light text-marcomm-dark dark:text-white">${mainPatent.Title}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                ${group.patents.length} variations
                             </div>
                         </div>
                     </div>
-                </td>
-            </tr>
-            <tr class="hidden" id="group-${groupIndex}">
-                <td colspan="5" class="px-6 py-2 bg-gray-50 dark:bg-gray-800">
-                    <div class="space-y-2">
-                        ${group.patents.map(patent => `
-                            <div class="border-l-4 border-blue-500 pl-4 py-2">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <a href="${patent.URL}" 
-                                           target="_blank"
-                                           class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline">
-                                            ${patent['Display Key']}
-                                        </a>
-                                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                            Filed: ${patent['Application Date']} | Status: ${patent['Legal Status']}
-                                        </p>
-                                    </div>
-                                    <button onclick='showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})'
-                                            class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                                        View Details
-                                    </button>
+                </div>
+            </td>
+        </tr>
+        <tr class="hidden" id="group-${groupIndex}">
+            <td colspan="5" class="px-6 py-2 bg-gray-50 dark:bg-gray-800">
+                <div class="space-y-2">
+                    ${group.patents.map(patent => `
+                        <div class="border-l-4 border-marcomm-orange pl-4 py-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <a href="${patent.URL}" 
+                                       target="_blank"
+                                       class="text-marcomm-orange hover:text-marcomm-orange-light dark:text-marcomm-orange dark:hover:text-marcomm-orange-light transition-colors">
+                                        ${patent['Display Key']}
+                                    </a>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                        Filed: ${patent['Application Date']} | Status: ${patent['Legal Status']}
+                                    </p>
                                 </div>
-                                <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                                    Citations: ${patent['Cites Patent Count'] + patent['Cited by Patent Count']}
-                                </div>
+                                <button onclick='showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})'
+                                        class="px-3 py-1 text-sm text-marcomm-orange hover:text-marcomm-orange-light dark:text-marcomm-orange dark:hover:text-marcomm-orange-light transition-colors">
+                                    View Details
+                                </button>
                             </div>
-                        `).join('')}
-                    </div>
-                </td>
-            </tr>
-        `;
-    }
+                            <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                Citations: ${patent['Cites Patent Count'] + patent['Cited by Patent Count']}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
 
     toggleGroup(groupId) {
         const content = document.getElementById(groupId);
@@ -288,51 +289,52 @@ groupPatentsByTitle(patents) {
         const content = document.getElementById('patentModalContent');
         
         content.innerHTML = `
-            <div class="space-y-4 text-gray-700 dark:text-white">
-                <h4 class="text-xl font-semibold dark:text-white">${patent.Title}</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="font-medium dark:text-white">Patent Number:</p>
-                        <p class="dark:text-white">${patent['Display Key']}</p>
-                    </div>
-                    <div>
-                        <p class="font-medium dark:text-white">Status:</p>
-                        <p class="dark:text-white">${patent['Legal Status']}</p>
-                    </div>
-                    <div>
-                        <p class="font-medium dark:text-white">Application Date:</p>
-                        <p class="dark:text-white">${patent['Application Date']}</p>
-                    </div>
-                    <div>
-                        <p class="font-medium dark:text-white">Publication Date:</p>
-                        <p class="dark:text-white">${patent['Publication Date']}</p>
-                    </div>
-                    <div>
-                        <p class="font-medium dark:text-white">Applicants:</p>
-                        <p class="dark:text-white">${patent['Applicants']}</p>
-                    </div>
-                    <div>
-                        <p class="font-medium dark:text-white">Inventors:</p>
-                        <p class="dark:text-white">${patent['Inventors']}</p>
-                    </div>
+        <div class="space-y-4">
+            <h4 class="text-xl font-light text-marcomm-dark dark:text-white">${patent.Title}</h4>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Patent Number:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Display Key']}</p>
                 </div>
                 <div>
-                    <p class="font-medium dark:text-white">Abstract:</p>
-                    <p class="mt-1 dark:text-white">${patent['Abstract'] || 'Not available'}</p>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Status:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Legal Status']}</p>
                 </div>
                 <div>
-                    <p class="font-medium dark:text-white">Citations:</p>
-                    <p class="dark:text-white">Patent citations: ${patent['Cites Patent Count'] || 0}</p>
-                    <p class="dark:text-white">Cited by patents: ${patent['Cited by Patent Count'] || 0}</p>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Application Date:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Application Date']}</p>
                 </div>
-                <div class="mt-4">
-                    <a href="${patent['URL']}" target="_blank" 
-                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
-                        View Patent Details
-                    </a>
+                <div>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Publication Date:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Publication Date']}</p>
+                </div>
+                <div>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Applicants:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Applicants']}</p>
+                </div>
+                <div>
+                    <p class="font-light text-marcomm-dark dark:text-gray-300">Inventors:</p>
+                    <p class="text-marcomm-dark dark:text-white">${patent['Inventors']}</p>
                 </div>
             </div>
-        `;
+            <div>
+                <p class="font-light text-marcomm-dark dark:text-gray-300">Abstract:</p>
+                <p class="mt-1 text-marcomm-dark dark:text-white">${patent['Abstract'] || 'Not available'}</p>
+            </div>
+            <div>
+                <p class="font-light text-marcomm-dark dark:text-gray-300">Citations:</p>
+                <p class="text-marcomm-dark dark:text-white">Patent citations: ${patent['Cites Patent Count'] || 0}</p>
+                <p class="text-marcomm-dark dark:text-white">Cited by patents: ${patent['Cited by Patent Count'] || 0}</p>
+            </div>
+            <div class="mt-4">
+                <a href="${patent['URL']}" target="_blank" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-light rounded-md shadow-sm text-white bg-marcomm-orange hover:bg-marcomm-orange-light transition-colors">
+                    View Patent Details
+                </a>
+            </div>
+        </div>
+    `;
+
 
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -485,7 +487,7 @@ groupPatentsByTitle(patents) {
                 labels: selectedData.legalStatus.labels,
                 datasets: [{
                     data: selectedData.legalStatus.data,
-                    backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#6B7280', '#3B82F6','#E07' ]
+                    backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#6B7280', '#FF6B35','#E07' ]
                 }]
             },
             options: {
@@ -504,7 +506,7 @@ groupPatentsByTitle(patents) {
                     label: 'Patents by Jurisdiction',
                     color: '#ffffff',
                     data: selectedData.jurisdictions.data,
-                    backgroundColor: '#3B82F6'
+                    backgroundColor: '#FF6B35'
                 }]
             },
             options: {
@@ -525,7 +527,7 @@ groupPatentsByTitle(patents) {
                 labels: selectedData.documentType.labels,
                 datasets: [{
                     data: selectedData.documentType.data,
-                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6']
+                    backgroundColor: ['#FF6B35', '#10B981', '#F59E0B', '#8B5CF6']
                 }]
             },
             options: {
@@ -543,7 +545,7 @@ groupPatentsByTitle(patents) {
                 datasets: [{
                     label: 'Number of Patents',
                     data: selectedData.applicants.data,
-                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#6B7280']
+                    backgroundColor: ['#FF6B35', '#10B981', '#F59E0B', '#6B7280']
                 }]
             },
             options: {
@@ -564,7 +566,7 @@ groupPatentsByTitle(patents) {
                 datasets: [{
                     label: 'Publications',
                     data: selectedData.publications.data,
-                    borderColor: '#3B82F6',
+                    borderColor: '#FF6B35',
                     tension: 0.4,
                     fill: false
                 }]
@@ -590,7 +592,7 @@ groupPatentsByTitle(patents) {
         if (!searchTerm) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-white">
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-300 font-light">
                         Enter a search term to find patents
                     </td>
                 </tr>
@@ -601,7 +603,7 @@ groupPatentsByTitle(patents) {
         if (searchTerm.length < 3) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-white">
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-300 font-light">
                         Please enter at least 3 characters to search
                     </td>
                 </tr>
@@ -611,29 +613,29 @@ groupPatentsByTitle(patents) {
     
         if (patents.length > 0) {
             tableBody.innerHTML = patents.map(patent => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                <tr class="hover:bg-marcomm-orange/5 dark:hover:bg-marcomm-orange/10 cursor-pointer transition-colors">
                     <td class="px-6 py-4 whitespace-nowrap">
                         <a href="${patent.URL}"
                            target="_blank"
-                           class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline">
+                           class="text-marcomm-orange hover:text-marcomm-orange-light dark:text-marcomm-orange dark:hover:text-marcomm-orange-light transition-colors">
                             ${patent['Display Key']}
                         </a>
                     </td>
-                    <td class="px-6 py-4 dark:text-white" onclick="showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})">
+                    <td class="px-6 py-4 font-light text-marcomm-dark dark:text-white" onclick="showPatentModal(${JSON.stringify(patent).replace(/"/g, '&quot;')})">
                         ${patent.Title}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap dark:text-white">
+                    <td class="px-6 py-4 whitespace-nowrap font-light text-marcomm-dark dark:text-white">
                         ${patent['Application Date']}
                     </td>
                     <td class="px-6 py-4">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${patent['Legal Status'] === 'Active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 
-                          patent['Legal Status'] === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' : 
-                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-white'}">
+                        <span class="px-2 inline-flex text-xs leading-5 font-light rounded-full 
+                        ${patent['Legal Status'] === 'Active' ? 'bg-marcomm-orange/10 text-marcomm-orange dark:bg-marcomm-orange/20 dark:text-marcomm-orange-light' : 
+                          patent['Legal Status'] === 'Pending' ? 'bg-marcomm-orange/10 text-marcomm-orange dark:bg-marcomm-orange/20 dark:text-marcomm-orange-light' : 
+                          'bg-gray-100 text-marcomm-dark dark:bg-gray-700 dark:text-gray-300'}">
                             ${patent['Legal Status']}
                         </span>
                     </td>
-                    <td class="px-6 py-4 dark:text-white">
+                    <td class="px-6 py-4 font-light text-marcomm-dark dark:text-white">
                         ${patent['Document Type']}
                     </td>
                 </tr>
@@ -641,18 +643,18 @@ groupPatentsByTitle(patents) {
         } else {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-white">
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-300 font-light">
                         No patents found matching your search
                     </td>
                 </tr>
             `;
         }
     }
-
+    
     showError() {
         const errorMessage = `
             <tr>
-                <td colspan="5" class="px-6 py-4 text-center text-red-500 dark:text-red-400">
+                <td colspan="5" class="px-6 py-4 text-center text-marcomm-orange dark:text-marcomm-orange-light font-light">
                     Error loading patent data. Please try again later.
                 </td>
             </tr>

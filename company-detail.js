@@ -1116,638 +1116,16 @@ async function initializeFinancialDashboard(companyName) {
     }
 }
 
-// Company-specific dashboard generators
-// function generateSonovaDashboard(data) {
-//     return `
-//         <div class="container mx-auto px-4 py-8">
-//             <!-- Company Header -->
-//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-//                 <div class="flex justify-between items-start">
-//                     <div>
-//                         <h1 class="text-3xl font-bold mb-2">Sonova Group</h1>
-//                         <p class="text-gray-600 dark:text-gray-400">${data.current_period.period}</p>
-//                     </div>
-//                     <div class="text-right">
-//                         <p class="text-sm text-gray-600 dark:text-gray-400">Last Updated: ${new Date().toLocaleString()}</p>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- KPIs -->
-//             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.revenue.total)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.current_period.key_financials.revenue.growth.local_currency)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITA (Adjusted)</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.ebita.adjusted)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.current_period.key_financials.ebita.margin_adjusted)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Hearing Instruments</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.current_period.key_financials.segments.hearing_instruments.organic_growth)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Cochlear Implants</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.segments.cochlear_implants.revenue)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.current_period.key_financials.segments.cochlear_implants.organic_growth)}</p>
-//                 </div>
-//             </div>
-
-//             <!-- Charts -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Revenue & Profitability</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="sonova-financial-metrics"></canvas>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Segment Revenue</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="sonova-segment-revenue"></canvas>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- Additional metrics -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Balance Sheet</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Total Assets</span>
-//                                 <span class="font-medium">${formatCurrency(data.current_period.balance_sheet.total_assets)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Equity</span>
-//                                 <span class="font-medium">${formatCurrency(data.current_period.balance_sheet.equity)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Equity Ratio</span>
-//                                 <span class="font-medium">${formatPercentage(data.current_period.balance_sheet.equity_ratio)}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Outlook ${data.outlook_2024_25 ? '2024/25' : ''}</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Sales Growth Guidance</span>
-//                                 <span class="font-medium">${data.outlook_2024_25?.sales_growth_guidance || '-'}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">EBITA Growth Guidance</span>
-//                                 <span class="font-medium">${data.outlook_2024_25?.adjusted_ebita_growth_guidance || '-'}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-// }
-
-// WS Audiology Dashboard Implementation
-// function generateWSADashboard(data) {
-//     return `
-//         <div class="container mx-auto px-4 py-8">
-//             <!-- Company Header -->
-//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-//                 <div class="flex justify-between items-start">
-//                     <div>
-//                         <h1 class="text-3xl font-bold mb-2">WS Audiology A/S</h1>
-//                         <p class="text-gray-600 dark:text-gray-400">Fiscal Year ${data.fiscal_year}</p>
-//                     </div>
-//                     <div class="text-right">
-//                         <p class="text-sm text-gray-600 dark:text-gray-400">Last Updated: ${new Date().toLocaleString()}</p>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- KPIs -->
-//             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.revenue.total)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.key_financials.revenue.organic_growth)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITDA</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.EBITDA.before_special_items)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.EBITDA.margin)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Gross Profit</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.gross_profit)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.gross_margin)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Free Cash Flow</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.cash_flow.free_cash_flow)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Operating: ${formatCurrency(data.key_financials.cash_flow.operating)}</p>
-//                 </div>
-//             </div>
-
-//             <!-- Charts -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Revenue by Region</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="wsa-revenue-by-region"></canvas>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Key Financial Metrics</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="wsa-financial-metrics"></canvas>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- Additional Metrics -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Operational Metrics</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Total Employees</span>
-//                                 <span class="font-medium">${data.operational_metrics.employees.total}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">R&D Spend</span>
-//                                 <span class="font-medium">${formatCurrency(data.operational_metrics.research_development.total_spend)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">R&D as % of Sales</span>
-//                                 <span class="font-medium">${formatPercentage(data.operational_metrics.research_development.as_percent_of_sales)}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Balance Sheet Overview</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Total Assets</span>
-//                                 <span class="font-medium">${formatCurrency(data.key_financials.balance_sheet.total_assets)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Equity</span>
-//                                 <span class="font-medium">${formatCurrency(data.key_financials.balance_sheet.equity)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Net Working Capital</span>
-//                                 <span class="font-medium">${formatCurrency(data.key_financials.balance_sheet.net_working_capital)}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-// }
-
-// // GN Store Nord Dashboard Implementation
-// function generateGNDashboard(data) {
-//     return `
-//         <div class="container mx-auto px-4 py-8">
-//             <!-- Company Header -->
-//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-//                 <div class="flex justify-between items-start">
-//                     <div>
-//                         <h1 class="text-3xl font-bold mb-2">GN Store Nord A/S</h1>
-//                         <p class="text-gray-600 dark:text-gray-400">${data.period.quarter} ${data.period.year}</p>
-//                     </div>
-//                     <div class="text-right">
-//                         <p class="text-sm text-gray-600 dark:text-gray-400">Report Date: ${data.period.report_date}</p>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- KPIs -->
-//             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.revenue.total)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Organic Growth: ${formatPercentage(data.financial_highlights.revenue.organic_growth)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITA</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.profitability.ebita.value)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.financial_highlights.profitability.ebita.margin)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Free Cash Flow</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.cash_flow.free_cash_flow.excl_ma)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Cash Conversion: ${formatPercentage(data.financial_highlights.cash_flow.cash_conversion)}</p>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Gross Profit</h3>
-//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.profitability.gross_profit.value)}</p>
-//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.financial_highlights.profitability.gross_profit.margin)}</p>
-//                 </div>
-//             </div>
-
-//             <!-- Charts -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Revenue by Division</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="gn-revenue-by-division"></canvas>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Geographic Distribution</h2>
-//                     </div>
-//                     <div class="p-4 h-80">
-//                         <canvas id="gn-geographic-revenue"></canvas>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <!-- Additional Metrics -->
-//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Guidance 2024</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Organic Growth Target</span>
-//                                 <span class="font-medium">${data.guidance_2024.organic_growth.range}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">EBITA Margin Target</span>
-//                                 <span class="font-medium">${data.guidance_2024.ebita_margin.range}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Free Cash Flow Target</span>
-//                                 <span class="font-medium">> ${formatCurrency(1100)}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-//                         <h2 class="text-lg font-medium">Capital Structure</h2>
-//                     </div>
-//                     <div class="p-4">
-//                         <div class="space-y-4">
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Market Cap</span>
-//                                 <span class="font-medium">${formatCurrency(data.capital_structure.market_metrics.market_cap)}</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Share Price</span>
-//                                 <span class="font-medium">${data.capital_structure.market_metrics.share_price} DKK</span>
-//                             </div>
-//                             <div class="flex justify-between">
-//                                 <span class="text-gray-600 dark:text-gray-400">Foreign Ownership</span>
-//                                 <span class="font-medium">${data.capital_structure.market_metrics.foreign_ownership}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-// }
-
-// // Chart initialization for WS Audiology
-// // Chart initialization for WS Audiology
-// function initializeWSACharts(data) {
-//     // Revenue by Region chart
-//     const regionCtx = document.getElementById('wsa-revenue-by-region');
-//     if (regionCtx) {
-//         new Chart(regionCtx, {
-//             type: 'pie',
-//             data: {
-//                 labels: ['EMEA', 'Americas', 'APAC'],
-//                 datasets: [{
-//                     data: [
-//                         data.key_financials.revenue.by_region.EMEA.revenue,
-//                         data.key_financials.revenue.by_region.Americas.revenue,
-//                         data.key_financials.revenue.by_region.APAC.revenue
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)',
-//                         'rgba(167, 139, 250, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         position: 'bottom',
-//                         labels: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     },
-//                     tooltip: {
-//                         callbacks: {
-//                             label: function(context) {
-//                                 return `${context.label}: ${formatCurrency(context.raw)} (${data.key_financials.revenue.by_region[context.label].share}%)`;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-
-//     // Financial Metrics chart
-//     const metricsCtx = document.getElementById('wsa-financial-metrics');
-//     if (metricsCtx) {
-//         new Chart(metricsCtx, {
-//             type: 'bar',
-//             data: {
-//                 labels: ['Revenue', 'EBITDA', 'Gross Profit', 'Operating Cash Flow'],
-//                 datasets: [{
-//                     label: 'Financial Metrics',
-//                     data: [
-//                         data.key_financials.revenue.total,
-//                         data.key_financials.profitability.EBITDA.before_special_items,
-//                         data.key_financials.profitability.gross_profit,
-//                         data.key_financials.cash_flow.operating
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)',
-//                         'rgba(167, 139, 250, 0.8)',
-//                         'rgba(249, 168, 212, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         display: false
-//                     }
-//                 },
-//                 scales: {
-//                     y: {
-//                         beginAtZero: true,
-//                         grid: {
-//                             color: document.documentElement.classList.contains('dark') ? '#374151' : '#E5E7EB'
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151',
-//                             callback: function(value) {
-//                                 return formatCurrency(value);
-//                             }
-//                         }
-//                     },
-//                     x: {
-//                         grid: {
-//                             display: false
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-// }
-
-// // Chart initialization for GN Store Nord
-// function initializeGNCharts(data) {
-//     // Revenue by Division chart
-//     const divisionCtx = document.getElementById('gn-revenue-by-division');
-//     if (divisionCtx) {
-//         new Chart(divisionCtx, {
-//             type: 'doughnut',
-//             data: {
-//                 labels: ['Hearing', 'Enterprise', 'Gaming & Consumer'],
-//                 datasets: [{
-//                     data: [
-//                         data.financial_highlights.revenue.by_division.hearing.revenue,
-//                         data.financial_highlights.revenue.by_division.enterprise.revenue,
-//                         data.financial_highlights.revenue.by_division.gaming_consumer.revenue
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)',
-//                         'rgba(167, 139, 250, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         position: 'bottom',
-//                         labels: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     },
-//                     tooltip: {
-//                         callbacks: {
-//                             label: function(context) {
-//                                 const division = context.label.toLowerCase().replace(' & ', '_');
-//                                 return `${context.label}: ${formatCurrency(context.raw)} (${formatPercentage(data.financial_highlights.revenue.by_division[division].organic_growth)} org. growth)`;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-
-//     // Geographic Revenue Distribution chart
-//     const geoCtx = document.getElementById('gn-geographic-revenue');
-//     if (geoCtx) {
-//         new Chart(geoCtx, {
-//             type: 'bar',
-//             data: {
-//                 labels: ['Europe', 'North America', 'Rest of World'],
-//                 datasets: [{
-//                     label: 'Revenue',
-//                     data: [
-//                         data.financial_highlights.revenue.by_geography.europe.revenue,
-//                         data.financial_highlights.revenue.by_geography.north_america.revenue,
-//                         data.financial_highlights.revenue.by_geography.rest_of_world.revenue
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)',
-//                         'rgba(167, 139, 250, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         display: false
-//                     }
-//                 },
-//                 scales: {
-//                     y: {
-//                         beginAtZero: true,
-//                         grid: {
-//                             color: document.documentElement.classList.contains('dark') ? '#374151' : '#E5E7EB'
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151',
-//                             callback: function(value) {
-//                                 return formatCurrency(value);
-//                             }
-//                         }
-//                     },
-//                     x: {
-//                         grid: {
-//                             display: false
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-// }
-
-// // Chart initialization functions for each company
-// function initializeSonovaCharts(data) {
-//     // Financial metrics chart
-//     const financialCtx = document.getElementById('sonova-financial-metrics');
-//     if (financialCtx) {
-//         new Chart(financialCtx, {
-//             type: 'bar',
-//             data: {
-//                 labels: ['Revenue', 'EBITA', 'Gross Profit'],
-//                 datasets: [{
-//                     label: 'Current Period (Millions)',
-//                     data: [
-//                         data.current_period.key_financials.revenue.total,
-//                         data.current_period.key_financials.ebita.adjusted,
-//                         data.prior_year.key_financials.gross_profit
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)',
-//                         'rgba(167, 139, 250, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         display: true,
-//                         position: 'top',
-//                         labels: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     }
-//                 },
-//                 scales: {
-//                     y: {
-//                         beginAtZero: true,
-//                         grid: {
-//                             color: document.documentElement.classList.contains('dark') ? '#374151' : '#E5E7EB'
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     },
-//                     x: {
-//                         grid: {
-//                             display: false
-//                         },
-//                         ticks: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-
-//     // Segment revenue chart
-//     const segmentCtx = document.getElementById('sonova-segment-revenue');
-//     if (segmentCtx) {
-//         new Chart(segmentCtx, {
-//             type: 'doughnut',
-//             data: {
-//                 labels: ['Hearing Instruments', 'Cochlear Implants'],
-//                 datasets: [{
-//                     data: [
-//                         data.current_period.key_financials.segments.hearing_instruments.revenue,
-//                         data.current_period.key_financials.segments.cochlear_implants.revenue
-//                     ],
-//                     backgroundColor: [
-//                         'rgba(96, 165, 250, 0.8)',
-//                         'rgba(52, 211, 153, 0.8)'
-//                     ]
-//                 }]
-//             },
-//             options: {
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: {
-//                         position: 'bottom',
-//                         labels: {
-//                             color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151'
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-// }
-
 
 // Sonova Dashboard Implementation
 function generateSonovaDashboard(data) {
     return `
-        <div class="container mx-auto px-4 py-8 dark:text-white">
+        <div class="container mx-auto px-4 py-8">
             <!-- Company Header -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">Sonova Group</h1>
+                        <h1 class="text-3xl font-light text-marcomm-dark dark:text-white">Sonova Group</h1>
                         <p class="text-gray-600 dark:text-gray-400">${data.current_period.period}</p>
                     </div>
                     <div class="text-right">
@@ -1759,33 +1137,33 @@ function generateSonovaDashboard(data) {
             <!-- Primary KPIs -->
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6 dark:text-white">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.revenue.total)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.key_financials.revenue.total)}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">LC Growth: ${formatPercentage(data.current_period.key_financials.revenue.growth.local_currency)}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Adj. EBITA</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.ebita.adjusted)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Adj. EBITA</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.key_financials.ebita.adjusted)}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.current_period.key_financials.ebita.margin_adjusted)}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">HI Revenue</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">HI Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.current_period.key_financials.segments.hearing_instruments.organic_growth)}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">CI Revenue</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.key_financials.segments.cochlear_implants.revenue)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">CI Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.key_financials.segments.cochlear_implants.revenue)}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.current_period.key_financials.segments.cochlear_implants.organic_growth)}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Assets</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.balance_sheet.total_assets)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Total Assets</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.balance_sheet.total_assets)}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Equity Ratio: ${formatPercentage(data.current_period.balance_sheet.equity_ratio)}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Equity</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.current_period.balance_sheet.equity)}</p>
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Equity</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.balance_sheet.equity)}</p>
                 </div>
             </div>
 
@@ -1880,15 +1258,335 @@ function generateSonovaDashboard(data) {
     `;
 }
 
-// WS Audiology Dashboard Implementation with expanded metrics
-function generateWSADashboard(data) {
+
+function generateSonkovaDashboard(data) {
     return `
-        <div class="container mx-auto px-4 py-8 dark:text-white">
+        <div class="container mx-auto px-4 py-8">
             <!-- Company Header -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">WS Audiology A/S</h1>
+                        <h1 class="text-3xl font-light text-marcomm-dark dark:text-white">Sonova Group</h1>
+                        <p class="text-gray-600 dark:text-gray-400">${data.current_period.period}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Last Updated: ${new Date().toLocaleString()}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary KPIs -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.current_period.key_financials.revenue.total)}</p>
+                    <p class="text-sm text-marcomm-orange">LC Growth: ${formatPercentage(data.current_period.key_financials.revenue.growth.local_currency)}</p>
+                </div>
+                                
+                <!-- Similar updates for other KPI cards -->
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Segment Revenue Distribution</h2>
+                    </div>
+                    <div class="p-4 h-80">
+                        <canvas id="sonova-segment-revenue"></canvas>
+                    </div>
+                </div>
+                <!-- Similar updates for other chart containers -->
+            </div>
+
+            <!-- Detailed Metrics -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Segment Performance</h2>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h3 class="font-light text-marcomm-dark dark:text-white mb-2">Hearing Instruments</h3>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Revenue</span>
+                                            <span class="text-marcomm-orange">${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</span>
+                                        </div>
+                                        <!-- Similar updates for other metrics -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outlook Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Outlook ${data.outlook_2024_25 ? '2024/25' : ''}</h2>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Sales Growth Guidance</span>
+                                <span class="text-marcomm-orange">${data.outlook_2024_25?.sales_growth_guidance || '-'}</span>
+                            </div>
+                            <!-- Similar updates for other metrics -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+
+// WS Audiology Dashboard Implementation with expanded metrics
+// function generateWSADashboard(data) {
+//     return `
+//         <div class="container mx-auto px-4 py-8 dark:text-white">
+//             <!-- Company Header -->
+//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+//                 <div class="flex justify-between items-start">
+//                     <div>
+//                         <h1 class="text-3xl font-bold mb-2">WS Audiology A/S</h1>
+//                         <p class="text-gray-600 dark:text-gray-400">Fiscal Year ${data.fiscal_year}</p>
+//                     </div>
+//                     <div class="text-right">
+//                         <p class="text-sm text-gray-600 dark:text-gray-400">Last Updated: ${new Date().toLocaleString()}</p>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <!-- Primary KPIs -->
+//             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6 dark:text-white">
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.revenue.total)}</p>
+//                     <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.key_financials.revenue.organic_growth)}</p>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITDA</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.EBITDA.before_special_items)}</p>
+//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.EBITDA.margin)}</p>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Gross Profit</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.gross_profit)}</p>
+//                     <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.gross_margin)}</p>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Operating Cash Flow</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.cash_flow.operating)}</p>
+//                     <p class="text-sm text-gray-600 dark:text-gray-400">FCF: ${formatCurrency(data.key_financials.cash_flow.free_cash_flow)}</p>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Assets</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.balance_sheet.total_assets)}</p>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Debt</h3>
+//                     <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</p>
+//                 </div>
+//             </div>
+
+//             <!-- Charts Section -->
+//             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Revenue by Region</h2>
+//                     </div>
+//                     <div class="p-4 h-80">
+//                         <canvas id="wsa-revenue-by-region"></canvas>
+//                     </div>
+//                     </div>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Operational Metrics</h2>
+//                     </div>
+//                     <div class="p-4 h-80">
+//                         <canvas id="wsa-operational-metrics"></canvas>
+//                     </div>
+//                 </div>
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Sustainability Metrics</h2>
+//                     </div>
+//                     <div class="p-4 h-80">
+//                         <canvas id="wsa-sustainability-metrics"></canvas>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <!-- Detailed Metrics -->
+//             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 dark:text-white">
+//                 <!-- Research & Development -->
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">R&D Overview</h2>
+//                     </div>
+//                     <div class="p-4">
+//                         <div class="space-y-4">
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Total R&D Spend</span>
+//                                 <span class="font-medium">${formatCurrency(data.operational_metrics.research_development.total_spend)}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">% of Sales</span>
+//                                 <span class="font-medium">${formatPercentage(data.operational_metrics.research_development.as_percent_of_sales)}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Capitalized R&D</span>
+//                                 <span class="font-medium">${formatCurrency(data.operational_metrics.research_development.capitalized)}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Annual Launches</span>
+//                                 <span class="font-medium">${data.operational_metrics.research_development.annual_launches}</span>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <!-- Market Data -->
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Market Overview</h2>
+//                     </div>
+//                     <div class="p-4">
+//                         <div class="space-y-4">
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Total Hearing Loss Market</span>
+//                                 <span class="font-medium">${data.market_data.addressable_market.total_hearing_loss}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Market Penetration</span>
+//                                 <span class="font-medium">${data.market_data.addressable_market.current_penetration}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Annual Market Size</span>
+//                                 <span class="font-medium">${data.market_data.addressable_market.annual_market_size}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Market Growth Rate</span>
+//                                 <span class="font-medium">${data.market_data.addressable_market.market_growth_rate}</span>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <!-- Debt Structure -->
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Debt Structure</h2>
+//                     </div>
+//                     <div class="p-4">
+//                         <div class="space-y-4">
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Net Interest Bearing Debt</span>
+//                                 <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Available Credit</span>
+//                                 <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.available_credit_facility)}</span>
+//                             </div>
+//                             <h3 class="font-medium mt-4 mb-2">Term Loans</h3>
+//                             <div class="space-y-2">
+//                                 <div class="flex justify-between">
+//                                     <span class="text-gray-600 dark:text-gray-400">EUR Loan</span>
+//                                     <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.term_loans.EUR.amount)}</span>
+//                                 </div>
+//                                 <div class="flex justify-between">
+//                                     <span class="text-gray-600 dark:text-gray-400">USD Loan</span>
+//                                     <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.term_loans.USD.amount)}</span>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <!-- Additional Metrics -->
+//             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 dark:text-white">
+//                 <!-- Employee Metrics -->
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Employee Overview</h2>
+//                     </div>
+//                     <div class="p-4">
+//                         <div class="grid grid-cols-2 gap-4">
+//                             <div>
+//                                 <h3 class="font-medium mb-2">Headcount</h3>
+//                                 <div class="space-y-2">
+//                                     <div class="flex justify-between">
+//                                         <span class="text-gray-600 dark:text-gray-400">Total Employees</span>
+//                                         <span>${data.operational_metrics.employees.total}</span>
+//                                     </div>
+//                                     <div class="flex justify-between">
+//                                         <span class="text-gray-600 dark:text-gray-400">R&D Staff</span>
+//                                         <span>${data.operational_metrics.employees.by_function.RnD}</span>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                             <div>
+//                                 <h3 class="font-medium mb-2">Turnover</h3>
+//                                 <div class="space-y-2">
+//                                     <div class="flex justify-between">
+//                                         <span class="text-gray-600 dark:text-gray-400">Total Turnover</span>
+//                                         <span>${data.operational_metrics.employees.turnover.total}</span>
+//                                     </div>
+//                                     <div class="flex justify-between">
+//                                         <span class="text-gray-600 dark:text-gray-400">Voluntary</span>
+//                                         <span>${data.operational_metrics.employees.turnover.voluntary}</span>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <!-- Sustainability -->
+//                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+//                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+//                         <h2 class="text-lg font-medium">Sustainability Metrics</h2>
+//                     </div>
+//                     <div class="p-4">
+//                         <div class="space-y-4">
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Scope 1 Emissions</span>
+//                                 <span class="font-medium">${data.sustainability_metrics.emissions.scope1} tCO2e</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Scope 2 (Market-based)</span>
+//                                 <span class="font-medium">${data.sustainability_metrics.emissions.scope2.market_based} tCO2e</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Renewable Electricity</span>
+//                                 <span class="font-medium">${formatPercentage(data.sustainability_metrics.energy.renewable_electricity_share)}</span>
+//                             </div>
+//                             <div class="flex justify-between">
+//                                 <span class="text-gray-600 dark:text-gray-400">Recycling Rate</span>
+//                                 <span class="font-medium">${formatPercentage(data.sustainability_metrics.waste_management.recycling_rate)}</span>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
+// }
+
+function generateWSADashboard(data) {
+    const dashboardHTML = `
+        <div class="container mx-auto px-4 py-8">
+            <!-- Company Header -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-light text-marcomm-dark dark:text-white mb-2">WS Audiology A/S</h1>
                         <p class="text-gray-600 dark:text-gray-400">Fiscal Year ${data.fiscal_year}</p>
                     </div>
                     <div class="text-right">
@@ -1898,59 +1596,58 @@ function generateWSADashboard(data) {
             </div>
 
             <!-- Primary KPIs -->
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6 dark:text-white">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.revenue.total)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Growth: ${formatPercentage(data.key_financials.revenue.organic_growth)}</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.revenue.total)}</p>
+                    <p class="text-sm text-marcomm-orange">Growth: ${formatPercentage(data.key_financials.revenue.organic_growth)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITDA</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.EBITDA.before_special_items)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.EBITDA.margin)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">EBITDA</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.profitability.EBITDA.before_special_items)}</p>
+                    <p class="text-sm text-marcomm-orange">Margin: ${formatPercentage(data.key_financials.profitability.EBITDA.margin)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Gross Profit</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.profitability.gross_profit)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.key_financials.profitability.gross_margin)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Gross Profit</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.profitability.gross_profit)}</p>
+                    <p class="text-sm text-marcomm-orange">Margin: ${formatPercentage(data.key_financials.profitability.gross_margin)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Operating Cash Flow</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.cash_flow.operating)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">FCF: ${formatCurrency(data.key_financials.cash_flow.free_cash_flow)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Operating Cash Flow</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.cash_flow.operating)}</p>
+                    <p class="text-sm text-marcomm-orange">FCF: ${formatCurrency(data.key_financials.cash_flow.free_cash_flow)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Assets</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.balance_sheet.total_assets)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Total Assets</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.balance_sheet.total_assets)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Debt</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Net Debt</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</p>
                 </div>
             </div>
 
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Revenue by Region</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Revenue by Region</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="wsa-revenue-by-region"></canvas>
                     </div>
-                    </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Operational Metrics</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Operational Metrics</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="wsa-operational-metrics"></canvas>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Sustainability Metrics</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Sustainability Metrics</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="wsa-sustainability-metrics"></canvas>
@@ -1958,154 +1655,80 @@ function generateWSADashboard(data) {
                 </div>
             </div>
 
-            <!-- Detailed Metrics -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 dark:text-white">
+            <!-- Detailed Metrics Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Research & Development -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">R&D Overview</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">R&D Overview</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Total R&D Spend</span>
-                                <span class="font-medium">${formatCurrency(data.operational_metrics.research_development.total_spend)}</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.operational_metrics.research_development.total_spend)}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">% of Sales</span>
-                                <span class="font-medium">${formatPercentage(data.operational_metrics.research_development.as_percent_of_sales)}</span>
+                                <span class="text-marcomm-orange">${formatPercentage(data.operational_metrics.research_development.as_percent_of_sales)}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Capitalized R&D</span>
-                                <span class="font-medium">${formatCurrency(data.operational_metrics.research_development.capitalized)}</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.operational_metrics.research_development.capitalized)}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Annual Launches</span>
-                                <span class="font-medium">${data.operational_metrics.research_development.annual_launches}</span>
+                                <span class="text-marcomm-orange">${data.operational_metrics.research_development.annual_launches}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Market Data -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Market Overview</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Market Overview</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Total Hearing Loss Market</span>
-                                <span class="font-medium">${data.market_data.addressable_market.total_hearing_loss}</span>
+                                <span class="text-marcomm-orange">${data.market_data.addressable_market.total_hearing_loss}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Market Penetration</span>
-                                <span class="font-medium">${data.market_data.addressable_market.current_penetration}</span>
+                                <span class="text-marcomm-orange">${data.market_data.addressable_market.current_penetration}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Annual Market Size</span>
-                                <span class="font-medium">${data.market_data.addressable_market.annual_market_size}</span>
+                                <span class="text-marcomm-orange">${data.market_data.addressable_market.annual_market_size}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Market Growth Rate</span>
-                                <span class="font-medium">${data.market_data.addressable_market.market_growth_rate}</span>
+                                <span class="text-marcomm-orange">${data.market_data.addressable_market.market_growth_rate}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Debt Structure -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Debt Structure</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Debt Structure</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Net Interest Bearing Debt</span>
-                                <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.key_financials.debt_structure.net_interest_bearing_debt)}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Available Credit</span>
-                                <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.available_credit_facility)}</span>
-                            </div>
-                            <h3 class="font-medium mt-4 mb-2">Term Loans</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 dark:text-gray-400">EUR Loan</span>
-                                    <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.term_loans.EUR.amount)}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 dark:text-gray-400">USD Loan</span>
-                                    <span class="font-medium">${formatCurrency(data.key_financials.debt_structure.term_loans.USD.amount)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Metrics -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 dark:text-white">
-                <!-- Employee Metrics -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Employee Overview</h2>
-                    </div>
-                    <div class="p-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h3 class="font-medium mb-2">Headcount</h3>
-                                <div class="space-y-2">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600 dark:text-gray-400">Total Employees</span>
-                                        <span>${data.operational_metrics.employees.total}</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600 dark:text-gray-400">R&D Staff</span>
-                                        <span>${data.operational_metrics.employees.by_function.RnD}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium mb-2">Turnover</h3>
-                                <div class="space-y-2">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600 dark:text-gray-400">Total Turnover</span>
-                                        <span>${data.operational_metrics.employees.turnover.total}</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600 dark:text-gray-400">Voluntary</span>
-                                        <span>${data.operational_metrics.employees.turnover.voluntary}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sustainability -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
-                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Sustainability Metrics</h2>
-                    </div>
-                    <div class="p-4">
-                        <div class="space-y-4">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Scope 1 Emissions</span>
-                                <span class="font-medium">${data.sustainability_metrics.emissions.scope1} tCO2e</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.key_financials.debt_structure.available_credit_facility)}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Scope 2 (Market-based)</span>
-                                <span class="font-medium">${data.sustainability_metrics.emissions.scope2.market_based} tCO2e</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Renewable Electricity</span>
-                                <span class="font-medium">${formatPercentage(data.sustainability_metrics.energy.renewable_electricity_share)}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Recycling Rate</span>
-                                <span class="font-medium">${formatPercentage(data.sustainability_metrics.waste_management.recycling_rate)}</span>
+                                <span class="text-gray-600 dark:text-gray-400">Term Loans</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.key_financials.debt_structure.term_loans.EUR.amount + data.key_financials.debt_structure.term_loans.USD.amount)}</span>
                             </div>
                         </div>
                     </div>
@@ -2113,8 +1736,14 @@ function generateWSADashboard(data) {
             </div>
         </div>
     `;
-}
 
+    // Initialize charts after dashboard is rendered
+    setTimeout(() => {
+        initializeWSACharts(data);
+    }, 0);
+
+    return dashboardHTML;
+}
 
 function initializeSonovaCharts(data) {
     const isDarkMode = document.documentElement.classList.contains('dark');
@@ -2396,12 +2025,12 @@ function initializeGNCharts(data) {
 // GN Dashboard Implementation
 function generateGNDashboard(data) {
     return `
-        <div class="container mx-auto px-4 py-8 dark:text-white">
+        <div class="container mx-auto px-4 py-8">
             <!-- Company Header -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">${data.company_info.name}</h1>
+                        <h1 class="text-3xl font-light text-marcomm-dark dark:text-white mb-2">${data.company_info.name}</h1>
                         <p class="text-gray-600 dark:text-gray-400">${data.period.quarter} ${data.period.year}</p>
                     </div>
                     <div class="text-right">
@@ -2411,80 +2040,80 @@ function generateGNDashboard(data) {
             </div>
 
             <!-- Primary KPIs -->
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6 dark:text-white">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Revenue</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.revenue.total)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Organic Growth: ${formatPercentage(data.financial_highlights.revenue.organic_growth)}</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Revenue</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.financial_highlights.revenue.total)}</p>
+                    <p class="text-sm text-marcomm-orange">Organic Growth: ${formatPercentage(data.financial_highlights.revenue.organic_growth)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">EBITA</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.profitability.ebita.value)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.financial_highlights.profitability.ebita.margin)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">EBITA</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.financial_highlights.profitability.ebita.value)}</p>
+                    <p class="text-sm text-marcomm-orange">Margin: ${formatPercentage(data.financial_highlights.profitability.ebita.margin)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Free Cash Flow</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.cash_flow.free_cash_flow.excl_ma)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Cash Conversion: ${data.financial_highlights.cash_flow.cash_conversion}%</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Free Cash Flow</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.financial_highlights.cash_flow.free_cash_flow.excl_ma)}</p>
+                    <p class="text-sm text-marcomm-orange">Cash Conversion: ${data.financial_highlights.cash_flow.cash_conversion}%</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Gross Profit</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.profitability.gross_profit.value)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Margin: ${formatPercentage(data.financial_highlights.profitability.gross_profit.margin)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Gross Profit</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.financial_highlights.profitability.gross_profit.value)}</p>
+                    <p class="text-sm text-marcomm-orange">Margin: ${formatPercentage(data.financial_highlights.profitability.gross_profit.margin)}</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Debt</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatCurrency(data.financial_highlights.balance_sheet.net_interest_bearing_debt)}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Leverage: ${data.financial_highlights.balance_sheet.leverage_ratio.adjusted}x</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Net Debt</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatCurrency(data.financial_highlights.balance_sheet.net_interest_bearing_debt)}</p>
+                    <p class="text-sm text-marcomm-orange">Leverage: ${data.financial_highlights.balance_sheet.leverage_ratio.adjusted}x</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Equity Ratio</h3>
-                    <p class="mt-2 text-3xl font-semibold">${formatPercentage(data.financial_highlights.balance_sheet.equity_ratio)}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">Equity Ratio</h3>
+                    <p class="mt-2 text-2xl font-light text-marcomm-orange">${formatPercentage(data.financial_highlights.balance_sheet.equity_ratio)}</p>
                 </div>
             </div>
 
             <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 dark:text-white">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Revenue Distribution</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Revenue Distribution</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="gn-revenue-distribution"></canvas>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Divisional Performance</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Divisional Performance</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             ${Object.entries(data.financial_highlights.revenue.by_division).map(([division, info]) => `
                                 <div>
-                                    <h3 class="font-medium mb-2">${division.charAt(0).toUpperCase() + division.slice(1)}</h3>
+                                    <h3 class="font-light text-marcomm-dark dark:text-white mb-2">${division.charAt(0).toUpperCase() + division.slice(1)}</h3>
                                     <div class="flex justify-between mb-1">
-                                        <span>Revenue</span>
-                                        <span>${formatCurrency(info.revenue)}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">Revenue</span>
+                                        <span class="text-marcomm-orange">${formatCurrency(info.revenue)}</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span>Organic Growth</span>
-                                        <span>${formatPercentage(info.organic_growth)}</span>
+                                        <span class="text-gray-600 dark:text-gray-400">Organic Growth</span>
+                                        <span class="text-marcomm-orange">${formatPercentage(info.organic_growth)}</span>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Geographic Distribution</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Geographic Distribution</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             ${Object.entries(data.financial_highlights.revenue.by_geography).map(([region, info]) => `
                                 <div class="flex justify-between">
-                                    <span>${region.charAt(0).toUpperCase() + region.slice(1)}</span>
-                                    <span>${formatCurrency(info.revenue)}</span>
+                                    <span class="text-gray-600 dark:text-gray-400">${region.charAt(0).toUpperCase() + region.slice(1)}</span>
+                                    <span class="text-marcomm-orange">${formatCurrency(info.revenue)}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -2493,46 +2122,46 @@ function generateGNDashboard(data) {
             </div>
 
             <!-- Additional Metrics -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 dark:text-white">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Operational Metrics</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">Operational Metrics</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
-                                <span>Total Employees</span>
-                                <span>${data.operational_metrics.employees.total}</span>
+                                <span class="text-gray-600 dark:text-gray-400">Total Employees</span>
+                                <span class="text-marcomm-orange">${data.operational_metrics.employees.total}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span>R&D Intensity</span>
-                                <span>${formatPercentage(data.operational_metrics.development_costs.rd_intensity)}</span>
+                                <span class="text-gray-600 dark:text-gray-400">R&D Intensity</span>
+                                <span class="text-marcomm-orange">${formatPercentage(data.operational_metrics.development_costs.rd_intensity)}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Development Costs</span>
-                                <span>${formatCurrency(data.operational_metrics.development_costs.total)}</span>
+                                <span class="text-gray-600 dark:text-gray-400">Development Costs</span>
+                                <span class="text-marcomm-orange">${formatCurrency(data.operational_metrics.development_costs.total)}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">2024 Guidance</h2>
+                        <h2 class="text-lg font-light text-marcomm-dark dark:text-white">2024 Guidance</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
-                                <span>Organic Growth</span>
-                                <span>${data.guidance_2024.organic_growth.range}</span>
+                                <span class="text-gray-600 dark:text-gray-400">Organic Growth</span>
+                                <span class="text-marcomm-orange">${data.guidance_2024.organic_growth.range}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span>EBITA Margin</span>
-                                <span>${data.guidance_2024.ebita_margin.range}</span>
+                                <span class="text-gray-600 dark:text-gray-400">EBITA Margin</span>
+                                <span class="text-marcomm-orange">${data.guidance_2024.ebita_margin.range}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Free Cash Flow (excl. M&A)</span>
-                                <span>>${data.guidance_2024.free_cash_flow_excl_ma.target}</span>
+                                <span class="text-gray-600 dark:text-gray-400">Free Cash Flow (excl. M&A)</span>
+                                <span class="text-marcomm-orange">>${data.guidance_2024.free_cash_flow_excl_ma.target}</span>
                             </div>
                         </div>
                     </div>
@@ -2542,14 +2171,192 @@ function generateGNDashboard(data) {
     `;
 }
 
+// function generateDemantDashboard(data) {
+//     return `
+//         <div class="container mx-auto px-4 py-8 dark:text-white">
+//             <!-- Company Header -->
+//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+//                 <div class="flex justify-between items-start">
+//                     <div>
+//                         <h1 class="text-3xl font-bold mb-2">Demant A/S</h1>
+//                         <p class="text-gray-600 dark:text-gray-400">Fiscal Period ${data.fiscal_period}</p>
+//                     </div>
+//                     <div class="text-right">
+//                         <p class="text-sm text-gray-600 dark:text-gray-400">Last Updated: ${new Date().toLocaleString()}</p>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <!-- Key Performance Cards -->
+//             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+//                 ${generateMetricCard("Total Revenue", data.key_financials.revenue.total, "M DKK", 
+//                     `Organic Growth: ${data.key_financials.revenue.organic_growth}%`)}
+//                 ${generateMetricCard("EBIT", data.key_financials.profitability.EBIT.reported, "M DKK", 
+//                     `Margin: ${data.key_financials.profitability.EBIT.margin}%`)}
+//                 ${generateMetricCard("Net Profit", data.key_financials.profitability.profit_after_tax.total, "M DKK")}
+//                 ${generateMetricCard("Free Cash Flow", data.key_financials.cash_flow.free_cash_flow, "M DKK")}
+//             </div>
+
+//             <!-- Charts Grid -->
+// <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Revenue by Region</h3>
+//         <div class="h-[400px]">
+//             <canvas id="demant-revenue-region"></canvas>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Profitability Metrics</h3>
+//         <div class="h-[400px]">
+//             <canvas id="demant-profitability"></canvas>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Revenue Breakdown</h3>
+//         <div class="h-[400px]">
+//             <canvas id="demant-revenue-details"></canvas>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Organic Growth Analysis</h3>
+//         <div class="h-[400px]">
+//             <canvas id="demant-organic-growth"></canvas>
+//         </div>
+//     </div>
+//     </div>
+//     <!-- R&D and Financial Analysis -->
+// <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
+//         <h3 class="text-lg font-semibold mb-6">R&D Investment Analysis</h3>
+//         <div class="h-[350px] w-full">
+//             <canvas id="demant-rnd-analysis"></canvas>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
+//         <h3 class="text-lg font-semibold mb-6">Balance Sheet Composition</h3>
+//         <div class="h-[350px] w-full">
+//             <canvas id="demant-balance-sheet"></canvas>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
+//         <h3 class="text-lg font-semibold mb-6">Cash Flow Analysis</h3>
+//         <div class="h-[350px] w-full">
+//             <canvas id="demant-cash-flow"></canvas>
+//         </div>
+//     </div>
+// </div>
+
+
+//             <!-- Detailed Metrics Section -->
+//             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+//                 ${generateDetailCard("Financial Health", [
+//                     ["Gross Margin", data.key_financials.profitability.gross_margin + "%"],
+//                     ["EBITDA Margin", data.key_financials.profitability.EBIT.margin + "%"],
+//                     ["Net Debt", data.key_financials.balance_sheet.net_interest_bearing_debt + "M DKK"],
+//                     ["Gearing Multiple", data.key_financials.balance_sheet.gearing_multiple]
+//                 ])}
+                
+//                 ${generateDetailCard("Operational Metrics", [
+//                     ["Total Employees", data.operational_metrics.employees.total],
+//                     ["R&D Costs", data.operational_metrics.rnd.costs + "M DKK"],
+//                     ["R&D Growth", data.operational_metrics.rnd.growth + "%"],
+//                     ["R&D % of Revenue", data.operational_metrics.rnd.percent_of_revenue + "%"]
+//                 ])}
+                
+//                 ${generateDetailCard("Sustainability", [
+//                     ["Scope 1&2 Emissions", data.sustainability_metrics.emissions.scope_1_2_market_based + " tCO2e"],
+//                     ["Renewable Energy", data.sustainability_metrics.renewable_electricity_share + "%"],
+//                     ["Women in Management", data.sustainability_metrics.diversity.all_managers_gender_ratio.women + "%"],
+//                     ["Board Diversity", data.sustainability_metrics.diversity.board_gender_ratio.women + "%"]
+//                 ])}
+//             </div>
+
+//             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">R&D Overview</h3>
+//         <div class="space-y-3">
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">R&D Investment</span>
+//                 <span class="font-medium">${data.key_financials.profitability.rd_costs.total.toLocaleString()} M DKK</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">% of Revenue</span>
+//                 <span class="font-medium">${data.key_financials.profitability.rd_costs.percent_of_revenue}%</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Growth Rate</span>
+//                 <span class="font-medium">${data.key_financials.profitability.rd_costs.growth}%</span>
+//             </div>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Balance Sheet Highlights</h3>
+//         <div class="space-y-3">
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Total Assets</span>
+//                 <span class="font-medium">${data.key_financials.balance_sheet.total_assets.toLocaleString()} M DKK</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Net Working Capital</span>
+//                 <span class="font-medium">${data.key_financials.balance_sheet.working_capital.toLocaleString()} M DKK</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Net Debt</span>
+//                 <span class="font-medium">${data.key_financials.balance_sheet.net_interest_bearing_debt.toLocaleString()} M DKK</span>
+//             </div>
+//         </div>
+//     </div>
+//     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+//         <h3 class="text-lg font-semibold mb-4">Cash Flow Metrics</h3>
+//         <div class="space-y-3">
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Operating Cash Flow</span>
+//                 <span class="font-medium">${data.key_financials.cash_flow.operating.toLocaleString()} M DKK</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Free Cash Flow</span>
+//                 <span class="font-medium">${data.key_financials.cash_flow.free_cash_flow.toLocaleString()} M DKK</span>
+//             </div>
+//             <div class="flex justify-between items-center">
+//                 <span class="text-gray-600 dark:text-gray-400">Net Investments</span>
+//                 <span class="font-medium">${data.key_financials.cash_flow.net_investments.toLocaleString()} M DKK</span>
+//             </div>
+//         </div>
+//     </div>
+// </div>
+
+
+//             <!-- Segment Details Table -->
+//             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+//                 <h3 class="text-lg font-semibold mb-4">Segment Analysis</h3>
+//                 <div class="overflow-x-auto">
+//                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+//                         <thead>
+//                             <tr>
+//                                 <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Segment</th>
+//                                 <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Revenue</th>
+//                                 <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Organic Growth</th>
+//                                 <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Q2 Revenue</th>
+//                             </tr>
+//                         </thead>
+//                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+//                             ${generateSegmentTableRows(data.key_financials.revenue.by_segment)}
+//                         </tbody>
+//                     </table>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
+// }
+
 function generateDemantDashboard(data) {
     return `
-        <div class="container mx-auto px-4 py-8 dark:text-white">
+        <div class="container mx-auto px-4 py-8">
             <!-- Company Header -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">Demant A/S</h1>
+                        <h1 class="text-3xl font-light text-marcomm-dark dark:text-white mb-2">Demant A/S</h1>
                         <p class="text-gray-600 dark:text-gray-400">Fiscal Period ${data.fiscal_period}</p>
                     </div>
                     <div class="text-right">
@@ -2568,28 +2375,28 @@ function generateDemantDashboard(data) {
                 ${generateMetricCard("Free Cash Flow", data.key_financials.cash_flow.free_cash_flow, "M DKK")}
             </div>
 
-            <!-- Charts Grid -->
+   <!-- Charts Grid -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Revenue by Region</h3>
+        <h3 class="text-lg font-semibold mb-4 dark:text-white">Revenue by Region</h3>
         <div class="h-[400px]">
             <canvas id="demant-revenue-region"></canvas>
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Profitability Metrics</h3>
+        <h3 class="text-lg font-semibold mb-4 dark:text-white">Profitability Metrics</h3>
         <div class="h-[400px]">
             <canvas id="demant-profitability"></canvas>
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Revenue Breakdown</h3>
+        <h3 class="text-lg font-semibold mb-4 dark:text-white">Revenue Breakdown</h3>
         <div class="h-[400px]">
             <canvas id="demant-revenue-details"></canvas>
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Organic Growth Analysis</h3>
+        <h3 class="text-lg font-semibold mb-4 dark:text-white">Organic Growth Analysis</h3>
         <div class="h-[400px]">
             <canvas id="demant-organic-growth"></canvas>
         </div>
@@ -2598,116 +2405,91 @@ function generateDemantDashboard(data) {
     <!-- R&D and Financial Analysis -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
-        <h3 class="text-lg font-semibold mb-6">R&D Investment Analysis</h3>
+        <h3 class="text-lg font-semibold mb-6 dark:text-white">R&D Investment Analysis</h3>
         <div class="h-[350px] w-full">
             <canvas id="demant-rnd-analysis"></canvas>
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
-        <h3 class="text-lg font-semibold mb-6">Balance Sheet Composition</h3>
+        <h3 class="text-lg font-semibold mb-6 dark:text-white">Balance Sheet Composition</h3>
         <div class="h-[350px] w-full">
             <canvas id="demant-balance-sheet"></canvas>
         </div>
     </div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-1">
-        <h3 class="text-lg font-semibold mb-6">Cash Flow Analysis</h3>
+        <h3 class="text-lg font-semibold mb-6 dark:text-white">Cash Flow Analysis</h3>
         <div class="h-[350px] w-full">
             <canvas id="demant-cash-flow"></canvas>
         </div>
     </div>
 </div>
 
-
-            <!-- Detailed Metrics Section -->
+            <!-- R&D and Financial Analysis -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                ${generateDetailCard("Financial Health", [
-                    ["Gross Margin", data.key_financials.profitability.gross_margin + "%"],
-                    ["EBITDA Margin", data.key_financials.profitability.EBIT.margin + "%"],
-                    ["Net Debt", data.key_financials.balance_sheet.net_interest_bearing_debt + "M DKK"],
-                    ["Gearing Multiple", data.key_financials.balance_sheet.gearing_multiple]
-                ])}
-                
-                ${generateDetailCard("Operational Metrics", [
-                    ["Total Employees", data.operational_metrics.employees.total],
-                    ["R&D Costs", data.operational_metrics.rnd.costs + "M DKK"],
-                    ["R&D Growth", data.operational_metrics.rnd.growth + "%"],
-                    ["R&D % of Revenue", data.operational_metrics.rnd.percent_of_revenue + "%"]
-                ])}
-                
-                ${generateDetailCard("Sustainability", [
-                    ["Scope 1&2 Emissions", data.sustainability_metrics.emissions.scope_1_2_market_based + " tCO2e"],
-                    ["Renewable Energy", data.sustainability_metrics.renewable_electricity_share + "%"],
-                    ["Women in Management", data.sustainability_metrics.diversity.all_managers_gender_ratio.women + "%"],
-                    ["Board Diversity", data.sustainability_metrics.diversity.board_gender_ratio.women + "%"]
-                ])}
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-light text-marcomm-dark dark:text-white mb-4">R&D Overview</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">R&D Investment</span>
+                            <span class="text-marcomm-orange">${data.key_financials.profitability.rd_costs.total.toLocaleString()} M DKK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">% of Revenue</span>
+                            <span class="text-marcomm-orange">${data.key_financials.profitability.rd_costs.percent_of_revenue}%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Growth Rate</span>
+                            <span class="text-marcomm-orange">${data.key_financials.profitability.rd_costs.growth}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-light text-marcomm-dark dark:text-white mb-4">Balance Sheet Highlights</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Total Assets</span>
+                            <span class="text-marcomm-orange">${data.key_financials.balance_sheet.total_assets.toLocaleString()} M DKK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Net Working Capital</span>
+                            <span class="text-marcomm-orange">${data.key_financials.balance_sheet.working_capital.toLocaleString()} M DKK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Net Debt</span>
+                            <span class="text-marcomm-orange">${data.key_financials.balance_sheet.net_interest_bearing_debt.toLocaleString()} M DKK</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-light text-marcomm-dark dark:text-white mb-4">Cash Flow Metrics</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Operating Cash Flow</span>
+                            <span class="text-marcomm-orange">${data.key_financials.cash_flow.operating.toLocaleString()} M DKK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Free Cash Flow</span>
+                            <span class="text-marcomm-orange">${data.key_financials.cash_flow.free_cash_flow.toLocaleString()} M DKK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Net Investments</span>
+                            <span class="text-marcomm-orange">${data.key_financials.cash_flow.net_investments.toLocaleString()} M DKK</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">R&D Overview</h3>
-        <div class="space-y-3">
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">R&D Investment</span>
-                <span class="font-medium">${data.key_financials.profitability.rd_costs.total.toLocaleString()} M DKK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">% of Revenue</span>
-                <span class="font-medium">${data.key_financials.profitability.rd_costs.percent_of_revenue}%</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Growth Rate</span>
-                <span class="font-medium">${data.key_financials.profitability.rd_costs.growth}%</span>
-            </div>
-        </div>
-    </div>
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Balance Sheet Highlights</h3>
-        <div class="space-y-3">
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Total Assets</span>
-                <span class="font-medium">${data.key_financials.balance_sheet.total_assets.toLocaleString()} M DKK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Net Working Capital</span>
-                <span class="font-medium">${data.key_financials.balance_sheet.working_capital.toLocaleString()} M DKK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Net Debt</span>
-                <span class="font-medium">${data.key_financials.balance_sheet.net_interest_bearing_debt.toLocaleString()} M DKK</span>
-            </div>
-        </div>
-    </div>
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Cash Flow Metrics</h3>
-        <div class="space-y-3">
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Operating Cash Flow</span>
-                <span class="font-medium">${data.key_financials.cash_flow.operating.toLocaleString()} M DKK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Free Cash Flow</span>
-                <span class="font-medium">${data.key_financials.cash_flow.free_cash_flow.toLocaleString()} M DKK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-gray-600 dark:text-gray-400">Net Investments</span>
-                <span class="font-medium">${data.key_financials.cash_flow.net_investments.toLocaleString()} M DKK</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-            <!-- Segment Details Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-                <h3 class="text-lg font-semibold mb-4">Segment Analysis</h3>
+            <!-- Segment Analysis Table -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                <h3 class="text-lg font-light text-marcomm-dark dark:text-white mb-4">Segment Analysis</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr>
-                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Segment</th>
-                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Revenue</th>
-                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Organic Growth</th>
-                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Q2 Revenue</th>
+                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-light text-gray-500 dark:text-gray-400 uppercase tracking-wider">Segment</th>
+                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-light text-gray-500 dark:text-gray-400 uppercase tracking-wider">Revenue</th>
+                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-light text-gray-500 dark:text-gray-400 uppercase tracking-wider">Organic Growth</th>
+                                <th class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-left text-xs font-light text-gray-500 dark:text-gray-400 uppercase tracking-wider">Q2 Revenue</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -2722,23 +2504,23 @@ function generateDemantDashboard(data) {
 
 function generateMetricCard(title, value, unit = "", subtitle = "") {
     return `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">${title}</h3>
-            <p class="mt-2 text-3xl font-semibold">${value.toLocaleString()} ${unit}</p>
-            ${subtitle ? `<p class="text-sm text-gray-600 dark:text-gray-400">${subtitle}</p>` : ''}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <h3 class="text-sm font-light text-gray-500 dark:text-gray-400">${title}</h3>
+            <p class="mt-2 text-2xl font-light text-marcomm-orange">${value.toLocaleString()} ${unit}</p>
+            ${subtitle ? `<p class="text-sm text-marcomm-orange">${subtitle}</p>` : ''}
         </div>
     `;
 }
 
 function generateDetailCard(title, items) {
     return `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">${title}</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-light text-marcomm-dark dark:text-white mb-4">${title}</h3>
             <div class="space-y-3">
                 ${items.map(([label, value]) => `
                     <div class="flex justify-between items-center">
                         <span class="text-gray-600 dark:text-gray-400">${label}</span>
-                        <span class="font-medium">${value}</span>
+                        <span class="text-marcomm-orange">${value}</span>
                     </div>
                 `).join('')}
             </div>
@@ -2748,11 +2530,11 @@ function generateDetailCard(title, items) {
 
 function generateSegmentTableRows(segments) {
     return Object.entries(segments).map(([name, data]) => `
-        <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">${name.replace(/_/g, ' ').toUpperCase()}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">${data.total.toLocaleString()} M DKK</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">${data.organic_growth}%</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">${data.q2_revenue.toLocaleString()} M DKK</td>
+        <tr class="hover:bg-marcomm-orange/5 dark:hover:bg-marcomm-orange/10 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-light text-marcomm-dark dark:text-white">${name.replace(/_/g, ' ').toUpperCase()}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-marcomm-orange">${data.total.toLocaleString()} M DKK</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-marcomm-orange">${data.organic_growth}%</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-marcomm-orange">${data.q2_revenue.toLocaleString()} M DKK</td>
         </tr>
     `).join('');
 }
