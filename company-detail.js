@@ -1171,7 +1171,7 @@ function generateSonovaDashboard(data) {
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 dark:text-white">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Segment Revenue Distribution</h2>
+                        <h2 class="text-lg font-light ">Segment Revenue Distribution</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="sonova-segment-revenue"></canvas>
@@ -1179,7 +1179,7 @@ function generateSonovaDashboard(data) {
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Financial Metrics Trend</h2>
+                        <h2 class="text-lg font-light">Financial Metrics Trend</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="sonova-financial-metrics"></canvas>
@@ -1187,7 +1187,7 @@ function generateSonovaDashboard(data) {
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Growth Metrics</h2>
+                        <h2 class="text-lg font-light">Growth Metrics</h2>
                     </div>
                     <div class="p-4 h-80">
                         <canvas id="sonova-growth-metrics"></canvas>
@@ -1199,34 +1199,34 @@ function generateSonovaDashboard(data) {
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 dark:text-white">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Segment Performance</h2>
+                        <h2 class="text-lg font-light">Segment Performance</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <h3 class="font-medium mb-2">Hearing Instruments</h3>
+                                    <h3 class="font-light mb-2">Hearing Instruments</h3>
                                     <div class="space-y-2">
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Revenue</span>
-                                            <span>${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</span>
+                                            <span class =" text-marcomm-orange " >${formatCurrency(data.current_period.key_financials.segments.hearing_instruments.revenue)}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Organic Growth</span>
-                                            <span>${formatPercentage(data.current_period.key_financials.segments.hearing_instruments.organic_growth)}</span>
+                                            <span class =" text-marcomm-orange ">${formatPercentage(data.current_period.key_financials.segments.hearing_instruments.organic_growth)}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 class="font-medium mb-2">Cochlear Implants</h3>
+                                    <h3 class="font-light mb-2">Cochlear Implants</h3>
                                     <div class="space-y-2">
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Revenue</span>
-                                            <span>${formatCurrency(data.current_period.key_financials.segments.cochlear_implants.revenue)}</span>
+                                            <span class =" text-marcomm-orange ">${formatCurrency(data.current_period.key_financials.segments.cochlear_implants.revenue)}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">Organic Growth</span>
-                                            <span>${formatPercentage(data.current_period.key_financials.segments.cochlear_implants.organic_growth)}</span>
+                                            <span class =" text-marcomm-orange ">${formatPercentage(data.current_period.key_financials.segments.cochlear_implants.organic_growth)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1238,17 +1238,17 @@ function generateSonovaDashboard(data) {
                 <!-- Outlook Section -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:text-white">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-medium">Outlook ${data.outlook_2024_25 ? '2024/25' : ''}</h2>
+                        <h2 class="text-lg font-light ">Outlook ${data.outlook_2024_25 ? '2024/25' : ''}</h2>
                     </div>
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">Sales Growth Guidance</span>
-                                <span class="font-medium">${data.outlook_2024_25?.sales_growth_guidance || '-'}</span>
+                                <span class="font-ligh text-marcomm-orange">${data.outlook_2024_25?.sales_growth_guidance || '-'}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600 dark:text-gray-400">EBITA Growth Guidance</span>
-                                <span class="font-medium">${data.outlook_2024_25?.adjusted_ebita_growth_guidance || '-'}</span>
+                                <span class="font-light text-marcomm-orange">${data.outlook_2024_25?.adjusted_ebita_growth_guidance || '-'}</span>
                             </div>
                         </div>
                     </div>

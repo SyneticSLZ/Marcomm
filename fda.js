@@ -1032,7 +1032,7 @@ function populateUDIDevices(data, page = 1) {
                 <div class="flex justify-between items-center cursor-pointer" 
                      onclick="toggleDeviceGroup('${baseModel.replace(/[^a-zA-Z0-9]/g, '-')}-group')">
                     <div>
-                        <div class="font-medium text-gray-900 dark:text-gray-100">${baseModel}</div>
+                        <div class="font-light text-gray-900 dark:text-gray-100">${baseModel}</div>
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             ${variants[0].company_name} • ${variants.length} variant${variants.length > 1 ? 's' : ''}
                         </div>
@@ -1056,7 +1056,7 @@ function populateUDIDevices(data, page = 1) {
                     ${variants.map(device => `
                         <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
                             <div>
-                                <div class="font-medium dark:text-gray-200">
+                                <div class="font-light dark:text-gray-200">
                                     ${device.brand_name}
                                     ${device.version_or_model_number ? 
                                         `<span class="text-sm text-gray-500 dark:text-gray-400">
@@ -1171,7 +1171,7 @@ const pageState = {
 //     tableBody.innerHTML = paginatedData.map(device => `
 //         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
 //             <td class="px-6 py-4 whitespace-nowrap">
-//                 <div class="font-medium text-gray-900 dark:text-gray-100">${device.brand_name}</div>
+//                 <div class="font-light text-gray-900 dark:text-gray-100">${device.brand_name}</div>
 //                 <div class="text-sm text-gray-500 dark:text-gray-400">${device.company_name}</div>
 //             </td>
 //             <td class="px-6 py-4">${device.version_or_model_number || 'N/A'}</td>
@@ -1584,7 +1584,7 @@ function populate510k(data, page = 1) {
                 <div class="flex justify-between items-center cursor-pointer" 
                      onclick="toggleDeviceGroup('${deviceFamily.replace(/[^a-zA-Z0-9]/g, '-')}-510k')">
                     <div>
-                        <div class="font-medium text-gray-900 dark:text-gray-100">${deviceFamily}</div>
+                        <div class="font-light text-gray-900 dark:text-gray-100">${deviceFamily}</div>
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             ${submissions[0].applicant} • ${submissions.length} submission${submissions.length > 1 ? 's' : ''}
                         </div>
@@ -1608,7 +1608,7 @@ function populate510k(data, page = 1) {
                     ${submissions.map(submission => `
                         <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
                             <div>
-                                <div class="font-medium dark:text-gray-200">
+                                <div class="font-light dark:text-gray-200">
                                     ${submission.k_number}
                                     <span class="text-sm text-gray-500 dark:text-gray-400">
                                         (${formatDate(submission.decision_date)})
@@ -1661,7 +1661,7 @@ function populateRegistrations(data, page = 1) {
                 <div class="flex justify-between items-center cursor-pointer" 
                      onclick="toggleDeviceGroup('${groupType.replace(/[^a-zA-Z0-9]/g, '-')}-reg')">
                     <div>
-                        <div class="font-medium text-gray-900 dark:text-gray-100">${groupType}</div>
+                        <div class="font-light text-gray-900 dark:text-gray-100">${groupType}</div>
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             ${facilities.length} facilit${facilities.length > 1 ? 'ies' : 'y'}
                         </div>
@@ -1685,7 +1685,7 @@ function populateRegistrations(data, page = 1) {
                     ${facilities.map(reg => `
                         <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
                             <div>
-                                <div class="font-medium dark:text-gray-200">
+                                <div class="font-light dark:text-gray-200">
                                     ${reg.registration?.name || 'N/A'}
                                 </div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -1729,7 +1729,7 @@ function populateAdverseEvents(data, page = 1) {
                 <div class="flex justify-between items-center cursor-pointer" 
                      onclick="toggleDeviceGroup('${eventType.replace(/[^a-zA-Z0-9]/g, '-')}-adverse')">
                     <div>
-                        <div class="font-medium text-gray-900 dark:text-gray-100">${eventType}</div>
+                        <div class="font-light text-gray-900 dark:text-gray-100">${eventType}</div>
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             ${events.length} event${events.length > 1 ? 's' : ''}
                         </div>
@@ -1753,7 +1753,7 @@ function populateAdverseEvents(data, page = 1) {
                     ${events.map(event => `
                         <div class="flex justify-between items-center py-2 border-b dark:border-gray-600">
                             <div>
-                                <div class="font-medium dark:text-gray-200">
+                                <div class="font-light dark:text-gray-200">
                                     ${event.report_number}
                                     <span class="text-sm text-gray-500 dark:text-gray-400">
                                         (${formatDate(event.date_received)})
@@ -1865,17 +1865,17 @@ function showUDIDetails(recordKey) {
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Model/Version</p>
-                    <p class="font-medium dark:text-white">${data.version_or_model_number || 'N/A'}</p>
+                    <p class="font-light dark:text-white">${data.version_or_model_number || 'N/A'}</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Device Class</p>
-                    <p class="font-medium dark:text-white">Class ${data.product_codes?.[0]?.openfda?.device_class || 'N/A'}</p>
+                    <p class="font-light dark:text-white">Class ${data.product_codes?.[0]?.openfda?.device_class || 'N/A'}</p>
                 </div>
             </div>
 
             ${data.gmdn_terms?.[0] ? `
                 <div class="border dark:border-gray-700 rounded-lg p-4">
-                    <h5 class="font-medium mb-2 dark:text-white">GMDN Classification</h5>
+                    <h5 class="font-light mb-2 dark:text-white">GMDN Classification</h5>
                     <p class="text-gray-700 dark:text-gray-300">${data.gmdn_terms[0].name}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">${data.gmdn_terms[0].definition}</p>
                 </div>
@@ -1883,7 +1883,7 @@ function showUDIDetails(recordKey) {
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2">
-                    <h5 class="font-medium mb-2 dark:text-white">Product Characteristics</h5>
+                    <h5 class="font-light mb-2 dark:text-white">Product Characteristics</h5>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex items-center">
                             <span class="text-gray-600 dark:text-gray-400">Single Use:</span>
@@ -1903,7 +1903,7 @@ function showUDIDetails(recordKey) {
 
             ${data.customer_contacts?.[0] ? `
                 <div class="border-t dark:border-gray-700 pt-4 mt-4">
-                    <h5 class="font-medium mb-2 dark:text-white">Contact Information</h5>
+                    <h5 class="font-light mb-2 dark:text-white">Contact Information</h5>
                     <p class="text-gray-700 dark:text-gray-300">
                         Phone: ${data.customer_contacts[0].phone}<br>
                         Email: ${data.customer_contacts[0].email}
@@ -1944,8 +1944,8 @@ function showAdverseEventDetails(reportNumber) {
 
             ${data.device?.[0] ? `
                 <div class="border dark:border-gray-700 rounded-lg p-4">
-                    <h5 class="font-medium mb-2 dark:text-white">Device Information</h5>
-                    <p class="font-medium dark:text-white">${data.device[0].brand_name || 'N/A'}</p>
+                    <h5 class="font-light mb-2 dark:text-white">Device Information</h5>
+                    <p class="font-light dark:text-white">${data.device[0].brand_name || 'N/A'}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">${data.device[0].generic_name || ''}</p>
                     ${data.device[0].model_number ? `
                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Model: ${data.device[0].model_number}</p>
@@ -1955,10 +1955,10 @@ function showAdverseEventDetails(reportNumber) {
 
             ${data.mdr_text?.length ? `
                 <div class="border dark:border-gray-700 rounded-lg p-4">
-                    <h5 class="font-medium mb-2 dark:text-white">Event Description</h5>
+                    <h5 class="font-light mb-2 dark:text-white">Event Description</h5>
                     ${data.mdr_text.map(text => `
                         <div class="mb-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">${text.text_type_code}</p>
+                            <p class="text-sm font-light text-gray-600 dark:text-gray-400">${text.text_type_code}</p>
                             <p class="mt-1 text-gray-700 dark:text-gray-300">${text.text}</p>
                         </div>
                     `).join('')}
@@ -1967,7 +1967,7 @@ function showAdverseEventDetails(reportNumber) {
 
             ${data.product_problems?.length ? `
                 <div class="border dark:border-gray-700 rounded-lg p-4">
-                    <h5 class="font-medium mb-2 dark:text-white">Product Problems</h5>
+                    <h5 class="font-light mb-2 dark:text-white">Product Problems</h5>
                     <ul class="list-disc list-inside text-gray-700 dark:text-gray-300">
                         ${data.product_problems.map(problem => `
                             <li>${problem}</li>

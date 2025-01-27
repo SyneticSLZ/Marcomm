@@ -938,10 +938,10 @@ const data = [
     const overallSummary = document.createElement('div');
     overallSummary.className = 'mb-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow';
     overallSummary.innerHTML = `
-      <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Overall Performance Summary</h2>
+      <h2 class="text-2xl font-light mb-6 text-gray-900 dark:text-white">Overall Performance Summary</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Market Leaders</h3>
+          <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Market Leaders</h3>
           <div class="space-y-2 text-gray-900 dark:text-white">
             ${overallMetrics.topPerformers.map((company, i) => 
               `<p>${i + 1}. ${company.name} (${company.share.toFixed(1)}%)</p>`
@@ -949,11 +949,11 @@ const data = [
           </div>
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Total Revenue</h3>
+          <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Total Revenue</h3>
           <p class="text-2xl text-gray-900 dark:text-white">$${overallMetrics.totalRevenue.toLocaleString()}</p>
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Total Units</h3>
+          <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Total Units</h3>
           <p class="text-2xl text-gray-900 dark:text-white">${overallMetrics.totalUnits.toLocaleString()}</p>
         </div>
       </div>
@@ -966,7 +966,7 @@ const data = [
     
     // Title
     const title = document.createElement('h2');
-    title.className = 'text-2xl font-bold mb-6 text-gray-900 dark:text-white';
+    title.className = 'text-2xl font-light mb-6 text-gray-900 dark:text-white';
     title.textContent = group.title;
     groupDiv.appendChild(title);
 
@@ -992,19 +992,19 @@ const data = [
     totalsDiv.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8';
     totalsDiv.innerHTML = `
       <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Total Sales</h3>
+        <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Total Sales</h3>
         <p class="text-2xl text-gray-900 dark:text-white">$${groupMetrics.totalSales.toLocaleString()}</p>
       </div>
       <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Total Units</h3>
+        <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Total Units</h3>
         <p class="text-2xl text-gray-900 dark:text-white">${groupMetrics.totalUnits.toLocaleString()}</p>
       </div>
       <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Average Cost</h3>
+        <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Average Cost</h3>
         <p class="text-2xl text-gray-900 dark:text-white">$${groupMetrics.averageCost.toFixed(2)}</p>
       </div>
       <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Top Performer</h3>
+        <h3 class="text-lg font-semilight mb-2 text-gray-900 dark:text-white">Top Performer</h3>
         <p class="text-2xl text-gray-900 dark:text-white">${groupMetrics.topPerformer}</p>
       </div>
     `;
