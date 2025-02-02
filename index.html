@@ -51,22 +51,26 @@
 </head>
 <body class="bg-gray-50 dark:bg-marcomm-gray-dark transition-colors duration-200">
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-800 shadow-md">
+    <nav class="bg-gray-800 shadow-md">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <span class="text-marcomm-orange text-2xl font-bold">MARCOMM</span>
+                        <img
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GreyTextno-outlineTM+2-dR9GD3ivT092LbXgN7D7iO44je85uD.png"
+                            alt="MARCOMM"
+                            class="h-8 w-auto"
+                        >
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="./index.html" class="bg-marcomm-orange text-white px-3 py-2 rounded text-sm font-medium hover:bg-marcomm-orange-light transition-colors">Companies</a>
-                            <a href="./Intelligence.html" class="text-gray-600 dark:text-gray-300 hover:text-marcomm-orange dark:hover:text-marcomm-orange-light px-3 py-2 text-sm font-medium" >Intelligence</a>
+                            <a href="./Intelligence.html" class="text-gray-300 hover:text-marcomm-orange-light px-3 py-2 text-sm font-medium">Intelligence</a>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <button id="darkModeToggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <button id="darkModeToggle" class="p-2 rounded-full text-gray-300 hover:bg-gray-700 transition-colors">
                         <i class="fas fa-sun dark:hidden"></i>
                         <i class="fas fa-moon hidden dark:inline"></i>
                     </button>
@@ -133,35 +137,25 @@
 
     <script src="competitor-list.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const html = document.documentElement;
-
-            const darkMode = localStorage.getItem('darkMode') === 'true' || 
-                            (!localStorage.getItem('darkMode') && 
-                             window.matchMedia('(prefers-color-scheme: dark)').matches);
-            
-            if (darkMode) {
-                html.classList.add('dark');
-            }
-
-            darkModeToggle.addEventListener('click', function() {
-                html.classList.toggle('dark');
-                localStorage.setItem('darkMode', html.classList.contains('dark'));
-            });
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (localStorage.getItem('darkMode') === null) {
-                    if (e.matches) {
-                        html.classList.add('dark');
-                        localStorage.setItem('darkMode', 'true');
-                    } else {
-                        html.classList.remove('dark');
-                        localStorage.setItem('darkMode', 'false');
-                    }
-                }
-            });
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const html = document.documentElement;
+    
+    // Check if darkMode exists in localStorage
+    const darkModeStatus = localStorage.getItem('darkMode');
+    
+    // If darkMode doesn't exist in localStorage OR is set to 'true', enable dark mode
+    if (!darkModeStatus || darkModeStatus === 'true') {
+        html.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+    }
+    
+    // Toggle functionality
+    darkModeToggle.addEventListener('click', function() {
+        html.classList.toggle('dark');
+        localStorage.setItem('darkMode', html.classList.contains('dark'));
+    });
+});
     </script>
 </body>
 </html>

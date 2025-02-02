@@ -555,7 +555,7 @@ const app = {
             'FDA Product Portfolio': this.renderProductPortfolio.bind(this),
             'Technology & Patents': this.renderTechnologyAnalysis.bind(this),
             'Digital Presence': this.renderDigitalPresence.bind(this),
-            'VA Affairs': this.renderStrategicInitiatives.bind(this),
+            'VA Intelligence': this.renderStrategicInitiatives.bind(this),
             'Financial Analysis': this.renderFinancialAnalysis.bind(this)
         };
 

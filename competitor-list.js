@@ -249,7 +249,7 @@ const mockCompetitors = {
             },
             marketPosition: {
                 rank: 1,
-                type: 'Market Leader',
+                type: 'Challenger',
                 strength: 'High',
                 trend: 'up'
             },
@@ -634,11 +634,12 @@ const components = {
                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[position.type]}">
                     ${position.type}
                 </span>
-                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                    Rank #${position.rank}
-                </span>
+
             `;
         },
+    //     <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+    //     Rank #${position.rank}
+    // </span>
 
         renderRecentActivities(activities) {
             const icons = {
