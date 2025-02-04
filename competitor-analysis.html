@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark-mode-transition dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1295,6 +1295,10 @@
 
     <script type="module"  src="competitor-analysis.js"></script>
     <script>
+            if (localStorage.getItem('darkMode') !== 'false') {
+        document.documentElement.classList.add('dark');
+    }
+
         document.addEventListener('DOMContentLoaded', function() {
     // Dark mode toggle functionality
     const darkModeToggle = document.getElementById('dark-mode-toggle');
