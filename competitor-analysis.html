@@ -1838,7 +1838,7 @@ function loadCompanyMetrics(company) {
     document.getElementById('revenue-metric').textContent = company.revenue.toLocaleString();
     document.getElementById('filings-metric').textContent = company.filings.toLocaleString();
     document.getElementById('patents-metric').textContent = company.recentPatents.toLocaleString();
-    document.getElementById('market-metric').textContent = company.marketShare.toFixed(1);
+    // document.getElementById('market-metric').textContent = company.marketShare.toFixed(1);
   }
 }
 
@@ -3344,6 +3344,7 @@ function calculateOverallShare(data, selectedCompany) {
 }
 
 function createMarketShareCard(detail) {
+    
     const shareColor = detail.share >= 30 ? 'text-green-600' :
                       detail.share >= 15 ? 'text-blue-600' : 'text-gray-600';
     
@@ -3387,6 +3388,7 @@ function updateMarketShareSection(companyId) {
             
             // Calculate overall metrics
             const overall = calculateOverallShare(data, selectedCompany);
+            document.getElementById('market-metric').textContent = formatPercentage(overall.percentage);
             
             // Update overall summary
             const summaryDiv = document.getElementById('overall-summary');
